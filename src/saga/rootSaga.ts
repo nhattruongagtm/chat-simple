@@ -7,5 +7,5 @@ function* helloSaga(){
     yield takeLatest("*",print)
 }
 export function* rootSaga(){
-    yield all([helloSaga()])
+    yield all([helloSaga()]) 
 }
