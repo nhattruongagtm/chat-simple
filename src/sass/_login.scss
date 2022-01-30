@@ -1,0 +1,46 @@
+.login{
+    &__option{
+        display: block;
+        text-align: center;
+        background-color: $dark-gray;
+        @include flex();
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin: 15px auto;
+    }
+    &__api{
+
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        @keyframes api {
+            0%{
+                box-shadow: 0 10px 50px -5px blue;
+            }
+            50%{
+                box-shadow: 0 15px 50px 0px blue;
+            }
+            100%{
+                box-shadow: 0 10px 50px -5px blue;
+            }
+        }
+        &__item{
+            cursor: pointer;
+            img{
+                border-radius: 50%;
+                transition: 0.2s;
+                &:hover{
+                    margin-top: -5px;
+                    animation: api 3s infinite;
+                }
+            }
+        }
+        .login--fb{
+
+        }
+        .login--gg{
+
+        }
+    }
+}

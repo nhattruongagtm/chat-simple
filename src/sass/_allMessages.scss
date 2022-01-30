@@ -1,0 +1,90 @@
+.all__message {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  &__title {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    color: white;
+    gap: 7px;
+    i:first-child {
+      font-size: 12px;
+    }
+    i:last-child {
+      flex-grow: 1;
+      text-align: right;
+      font-size: 18px;
+    }
+  }
+  &__main {
+      overflow-y: scroll;
+      max-height: 250px;
+      flex-grow: 1;
+      &::-webkit-scrollbar{
+          display: none;
+      }
+      background-color: transparent;
+    .all__message__item {
+      display: flex;
+      border-radius: 15px;
+      cursor: pointer;
+      display: flex;
+      // gap: 10px;
+      align-items: flex-start;
+      border-bottom: 1px solid $dark-light;
+      padding: 10px;
+      margin-bottom: 20px;
+      transition: 0.2s;
+      img {
+        @include avatar(35px);
+      }
+      .notify__name__info {
+        p:first-child {
+          margin-bottom: 10px;
+        }
+        p:last-child {
+        }
+      }
+      .message__item__avatar {
+        position: relative;
+        margin-right: 10px;
+
+        .icon--active {
+          @include avatar(8px);
+          background-color: greenyellow;
+          border: 2px solid $dark;
+          position: absolute;
+          bottom: 0px;
+          right: 0px;
+        }
+      }
+      .message__item__time {
+        color: white;
+        font-size: 12px;
+        flex-grow: 1;
+        text-align: right;
+        align-self: flex-start;
+      }
+      .message__item__content {
+        max-width: 100%;
+        width: 100%; // chiều rộng bằng khối bao nó
+        white-space: pre-wrap;
+        overflow: hidden; // ẩn các nội dung khi kích thước lớn hơn chiều rộng khối bên ngoài
+        text-overflow: ellipsis; //thêm 3 dấu chấm ở cuối
+        -webkit-line-clamp: 1; // số dòng muốn hiển thị
+        -webkit-box-orient: vertical;
+        display: -webkit-box;
+
+        &--active {
+          color: white;
+        }
+      }
+      &:hover, &--active{
+        // background-color: $dark-brown;
+        background: linear-gradient(to bottom, $dark-brown 40%, rgb(20, 20, 20));
+      }
+    }
+  }
+}

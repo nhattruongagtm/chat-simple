@@ -1,0 +1,34 @@
+.container {
+  max-width: 90%;
+}
+
+body {
+  font-size: 14px;
+  font-family: "Montserrat", sans-serif;
+}
+
+.name {
+  color: white;
+  margin-bottom: 8px;
+}
+.message {
+  color: $text-color;
+  font-size: 11.5px;
+  font-weight: 400;
+}
+.avatar {
+  position: relative;
+  img {
+
+  }
+  .icon--active {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: greenyellow;
+    border-radius: 50%;
+    width: 8px;
+    height: 8px;
+    border: 2px solid $dark;
+  }
+}

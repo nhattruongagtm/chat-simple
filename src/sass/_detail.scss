@@ -1,0 +1,211 @@
+.detail__info {
+  flex-grow: 1;
+  background: linear-gradient(to bottom, $dark-brown, $super-dark);
+  padding: 15px;
+  .detail__header {
+    display: flex;
+    justify-content: space-between;
+    color: rgb(224, 224, 224);
+    &__title {
+      i {
+        margin-right: 7px;
+      }
+      span {
+        font-weight: 700;
+      }
+    }
+    i {
+    }
+    .header__close {
+      // margin-right: 10px;
+    }
+  }
+  .detail__figure {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    .detail__photo {
+      img {
+        @include avatar(80px);
+      }
+    }
+    p {
+      color: rgb(206, 206, 206);
+      font-weight: 700;
+    }
+  }
+  .detail__attach {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    &__item {
+      width: 30%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+      border-radius: 15px;
+      background-color: $dark-gray;
+    
+      cursor: pointer;
+      .detail__attach__title {
+        color: $text-color;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      .detail__attach__main {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        i {
+          display: block;
+          width: 20px;
+          height: 20px;
+          border-radius: 5px;
+          @include flex();
+        }
+        .files {
+          background-color: #b822ff;
+          box-shadow: 0 0 5px 2px #b922ff48;
+        }
+        .links {
+          background-color: #ffce22;
+          box-shadow: 0 0 5px 2px #ffcf2249;
+        }
+        span {
+          color: rgb(196, 196, 196);
+          font-weight: 700;
+        }
+      }
+      &:hover{
+        background: linear-gradient(to bottom,$dark-gray-light,rgb(90, 90, 90));
+      }
+      &:hover .detail__attach__title{
+        color: white;
+      }
+    }
+  }
+  .detail__members {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    color: $text-color;
+    &__title {
+      .detail__members__tt {
+        span:first-child {
+          margin-right: 7px;
+        }
+        span:last-child {
+          font-weight: bold;
+          color: white;
+        }
+      }
+    }
+    .detail__members__more {
+      color: #ffce22;
+    }
+  }
+  .members__list {
+    max-height: 150px;
+    margin-bottom: 30px;
+    &__item {
+      margin-bottom: 10px;
+      img {
+        @include avatar(20px);
+      }
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      .members__list__name {
+        color: $text-color;
+        max-width: 60%;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        overflow: hidden;
+        font-size: 13px;
+
+        span:last-child {
+          color: #ffce22;
+          font-size: 11px;
+        }
+      }
+      .members__list__call {
+        flex-grow: 1;
+        display: flex;
+        justify-content: right;
+        gap: 15px;
+        font-size: 18px;
+        color: $text-color;
+        i {
+        }
+      }
+    }
+  }
+  .detail__media {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 30px;
+
+    .detail__media__item {
+      width: 45px;
+      height: 45px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      transform: scale(1.5);
+      object-fit: cover;
+      background-color: blue;
+    }
+    .detail__media__more {
+      // background-color: $blue;
+      background-color: rgb(218, 218, 218);
+      @include flex();
+    }
+  }
+  .detail__options {
+    &__item {
+      display: flex;
+      justify-content: space-between;
+      p {
+        color: $text-color;
+      }
+      .color__item {
+        @include flex();
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        i {
+          color: $dark-gray-light;
+          font-size: 12px;
+          cursor: pointer;
+        }
+        &--red {
+          background-color: red;
+        }
+        &--yellow {
+          background-color: yellow;
+        }
+        &--green {
+          background-color: green;
+        }
+        &--blue {
+          background-color: $blue;
+        }
+      }
+    }
+    &__colors{
+        display: flex;
+        gap: 10px;
+    }
+  }
+}

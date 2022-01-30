@@ -1,0 +1,47 @@
+.input__chat {
+  height: 35px;
+  width: calc(100% - 40px);
+  background-color: $dark;
+  margin-bottom: 20px;
+  border-radius: 20px;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+  &__avatar {
+    img {
+      @include avatar(30px);
+    }
+  }
+  input {
+    flex-grow: 1;
+    height: 100%;
+    color: white;
+    background-color: inherit;
+  }
+  .input__attach {
+    @include flex();
+    gap: 20px;
+    font-size: 20px;
+    i {
+      transition: 0.2s;
+      color: $dark-gray-light;
+    }
+    i:last-child {
+      color: rgb(209, 209, 209);
+    }
+    i:hover {
+      color: rgb(219, 219, 219);
+    }
+
+    i:nth-child(2) {
+      padding-right: 30px;
+      border-right: 2px solid $dark-gray-light;
+    }
+    i:nth-child(3):hover {
+      color: $blue;
+    }
+  }
+}

@@ -1,0 +1,14 @@
+.screen {
+  width: 100%;
+  height: 100vh;
+  background-color: rgb(1, 0, 44);
+  @include flex(row, center, center, 0);
+}
+.wrapper {
+  width: 80%;
+  background-color: #000000;
+  height: 90%;
+  border-radius: 15px;
+  overflow: hidden;
+  display: flex;
+}

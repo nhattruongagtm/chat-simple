@@ -1,0 +1,25 @@
+.message__list {
+  &__title {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    & > p {
+        color: white;
+        gap: 5px;
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+      p {
+        font-size: 15px;
+      }
+      span {
+        color: $blue;
+        font-size: 17px;
+      }
+    }
+    .message__title__icon {
+        color: $dark-light;
+        font-size: 20px;
+    }
+  }
+}

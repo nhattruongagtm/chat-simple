@@ -1,0 +1,23 @@
+.search__frame {
+  border-radius: 15px;
+  background-color: $dark;
+  height: 35px;
+  @include flex();
+  i {
+    color: $dark-light;
+    font-size: 17px;
+    width: 20%;
+    @include flex();
+  }
+  .search__start {
+  }
+  .search__end {
+  }
+  input {
+    width: 60%;
+    height: calc(100% - 2px);
+    background-color: inherit;
+    color: white;
+    transition: 0.3s;
+  }
+}
