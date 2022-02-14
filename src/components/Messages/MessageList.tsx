@@ -7,7 +7,7 @@ const MessageList = (props: MessageListProps) => {
     <div className="message__list">
       <div className="message__list__title">
         <p>
-          <p>Message</p>
+          <span>Message</span>
           <span>(29)</span>
         </p>
         <div className="message__title__icon">

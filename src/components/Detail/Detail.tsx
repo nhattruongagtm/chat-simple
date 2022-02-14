@@ -55,7 +55,7 @@ const Detail = (props: DetailProps) => {
             <span>Creator</span>
           </div>
           <div className="members__list__call">
-            <i className="far fa-comment"></i>
+            <i className="fa-solid fa-phone"></i>
             <i className="far fa-comment"></i>
           </div>
         </div>
@@ -63,12 +63,9 @@ const Detail = (props: DetailProps) => {
           <div className="avatar">
             <img src="./assets/avatar1.svg" alt="" />
           </div>
-          <div className="members__list__name">
-            Huawing Wang 
-         
-          </div>
+          <div className="members__list__name">Huawing Wang</div>
           <div className="members__list__call">
-            <i className="far fa-comment"></i>
+            <i className="fa-solid fa-phone"></i>
             <i className="far fa-comment"></i>
           </div>
         </div>
@@ -76,12 +73,9 @@ const Detail = (props: DetailProps) => {
           <div className="avatar">
             <img src="./assets/avatar2.svg" alt="" />
           </div>
-          <div className="members__list__name">
-            Michael Alex
-         
-          </div>
+          <div className="members__list__name">Michael Alex</div>
           <div className="members__list__call">
-            <i className="far fa-comment"></i>
+            <i className="fa-solid fa-phone"></i>
             <i className="far fa-comment"></i>
           </div>
         </div>

@@ -1,35 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { ChatListItem } from "../../models/chat";
+import { RootState } from "../../store";
 import MessaggeItem from "./MessaggeItem";
 
 type Props = {};
 
-export interface MessageItem {
-  id: number;
-  userClient: number;
-  avatarClient: string;
-  nameClient: string;
-  time: Date;
-  content: string;
-}
 const AllMessages = (props: Props) => {
-  const messages: MessageItem[] = [
-    {
-      id: 1,
-      userClient: 1,
-      nameClient: "Smith Ava",
-      avatarClient: "http://localhost:3000/assets/avatar1.svg",
-      time: new Date(),
-      content: "How's is going?",
-    },
-    {
-      id: 2,
-      userClient: 1,
-      nameClient: "Simon",
-      avatarClient: "http://localhost:3000/assets/avatar2.svg",
-      time: new Date(),
-      content: "Not bad, How about you, Ava?",
-    },
-  ];
+  const loadMessage = useSelector((state: RootState) => state.chat);
+  const { loading, chatList } = loadMessage;
+  const [messages, setMessages] = useState<ChatListItem[]>();
+  useEffect(() => {
+    setMessages(chatList.messages.filter(message=>message.status === true));
+  }, [chatList]);
+
   return (
     <div className="all__message">
       <div className="all__message__title">
@@ -38,11 +22,10 @@ const AllMessages = (props: Props) => {
         <i className="fas fa-ellipsis-h"></i>
       </div>
       <div className="all__message__main">
-        {
-            messages.map((message)=>(
-                <MessaggeItem msg={message} key={message.id}/>
-            ))
-        }
+        {messages &&
+          messages.map((message) => (
+            <MessaggeItem msg={message} key={message.friendID} />
+          ))}
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router";
+import { useHistory } from "react-router";
 import md5 from 'md5'
 import { signup } from "../../api/firestore";
 import { requestSignUp } from "../../features/auth/signUpSlice";
@@ -10,24 +10,24 @@ interface SignUpInput {
   firstName: string;
   lastName: string;
   password: string;
+  reType: string;
 }
 export const SignUpPage = (props: SignUpPageProps) => {
   const [isTooglePassword, setIsTooglePassword] = useState<boolean>(false);
-  const navigate = useNavigate();
+  const [isToogleRePassword, setIsToogleRePassword] = useState<boolean>(false);
+  const navigate = useHistory();
   const dispatch = useDispatch();
   const [input, setInput] = useState<SignUpInput>({
     email: "",
     firstName: "",
     lastName: "",
     password: "",
+    reType: "",
   });
   const handleSubmitSignUp = async (e: React.FormEvent<HTMLFormElement>) =>{
     e.preventDefault()
 
-    // const user = await signup(input.firstName,input.lastName,input.email,input.password);
-
-    // console.log(user);
-    dispatch(requestSignUp())
+    dispatch(requestSignUp(input))
     
 
   }
@@ -44,7 +44,7 @@ export const SignUpPage = (props: SignUpPageProps) => {
       <div className="signup__container">
         <div className="signup__header">
           <img src="./assets/logo.svg" alt="" />
-          T-Messeger<span>.</span>
+          T-Messenger<span>.</span>
         </div>
         <div className="signup__main">
           <div className="signup__main__title">
@@ -54,7 +54,7 @@ export const SignUpPage = (props: SignUpPageProps) => {
             </p>
             <p>
               Already a member?{" "}
-              <span onClick={() => navigate("/")}>Log in</span>
+              <span onClick={() => navigate.push("/")}>Log in</span>
             </p>
           </div>
         </div>
@@ -98,6 +98,22 @@ export const SignUpPage = (props: SignUpPageProps) => {
               onClick={() => setIsTooglePassword(!isTooglePassword)}
             >
               {isTooglePassword ? (
+                <i className="fas fa-eye-slash"></i>
+              ) : (
+                <i className="fas fa-eye"></i>
+              )}
+            </div>
+          </div>
+          <div className="signup__name__first signup__name__item signup__item signup__email">
+            <div className="signup__label">
+              Retype
+              <input type={isToogleRePassword ? "text" : "password"} name="reType" value={input.reType} onChange={handleChangeInput}/>
+            </div>
+            <div
+              className="signup__icon__input"
+              onClick={() => setIsToogleRePassword(!isToogleRePassword)}
+            >
+              {isToogleRePassword ? (
                 <i className="fas fa-eye-slash"></i>
               ) : (
                 <i className="fas fa-eye"></i>

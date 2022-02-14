@@ -13,6 +13,7 @@ const MainPage = (props: Props) => {
       <MessagePanel />
       <MainChat />
       <Detail />
+
     </>
   );
 };

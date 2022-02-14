@@ -1,8 +1,9 @@
 import { FacebookAuthProvider, GoogleAuthProvider } from "firebase/auth";
 import React, { useState } from "react";
-import { useNavigate } from "react-router";
-import { login } from "../../api/firestore";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router";
 import { facebookProvider, googleProvider } from "../../config/authMethods";
+import { requestLogin } from "../../features/auth/signUpSlice";
 import socialAuth from "../../service/auth";
 
 interface LoginPageProps {}
@@ -16,22 +17,11 @@ const LoginPage = (props: LoginPageProps) => {
     password: "",
   });
   const [isTooglePassword, setIsTooglePassword] = useState<boolean>(false);
-  const navigate = useNavigate();
+  const history = useHistory();
+  const dispatch = useDispatch();
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const resultLogin = await login(input.email, input.password);
-
-    if(resultLogin?.email){
-      // đăng nhập thành công!
-      console.log(true)
-    }
-    else{
-      // đăng nhập thất bại
-      console.log(false)
-
-    }
-    // navigate('/me');
+    dispatch(requestLogin(input));  
   };
   const handleLoginApi = async (
     provider: FacebookAuthProvider | GoogleAuthProvider
@@ -52,7 +42,7 @@ const LoginPage = (props: LoginPageProps) => {
       <div className="signup__container">
         <div className="signup__header">
           <img src="./assets/logo.svg" alt="" />
-          T-Messeger<span>.</span>
+          T-Messenger<span>.</span>
         </div>
         <div className="signup__main">
           <div className="signup__main__title">
@@ -62,7 +52,7 @@ const LoginPage = (props: LoginPageProps) => {
             </p>
             <p>
               Don't have an account?{" "}
-              <span onClick={() => navigate("/signup")}>Sign up</span>
+              <span onClick={() => history.push("/signup")}>Sign up</span>
             </p>
           </div>
         </div>

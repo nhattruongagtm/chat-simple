@@ -1,9 +1,9 @@
 import React from "react";
-import { useNavigate } from "react-router";
+import { useHistory } from "react-router";
 interface MenuProps {}
 
 export const Menu = (props: MenuProps) => {
-  const navigate = useNavigate();
+  const navigate = useHistory();
   return (
     <div className="menu">
       <div className="menu__colors"></div>
@@ -14,7 +14,7 @@ export const Menu = (props: MenuProps) => {
         <img src="./assets/home-fill.svg" alt="" />
       </div>
       <div className="menu__exit">
-        <div className="menu__item" onClick={()=>navigate('/')}>
+        <div className="menu__item" onClick={()=>navigate.push('/')}>
         <i className="fas fa-sign-out-alt"></i>
         </div>
       </div>

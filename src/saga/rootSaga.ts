@@ -1,11 +1,9 @@
-import {all, delay, takeEvery, takeLatest} from 'redux-saga/effects'
-function* print(){
-    yield delay(500)
-    console.log("welcome to T-Messenger")
-}
-function* helloSaga(){
-    yield takeLatest("*",print)
-}
-export function* rootSaga(){
-    yield all([helloSaga()]) 
+import { all, delay, takeEvery, takeLatest } from "redux-saga/effects";
+import { addFriendSaga } from "./addFriendSaga";
+import loadMessageSaga from "./loadMessagesSaga";
+import loginSaga from "./loginSaga";
+import signUpSaga from "./signUpSaga";
+
+export function* rootSaga() {
+  yield all([signUpSaga(), loginSaga(), addFriendSaga(), loadMessageSaga()]);
 }

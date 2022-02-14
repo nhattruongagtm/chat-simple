@@ -1,13 +1,17 @@
 import React from "react";
+import { ChatMainContext } from "./ChatFrame";
 
 interface HeaderProps {}
 
 const Header = (props: HeaderProps) => {
+  const user = React.useContext(ChatMainContext)
+
   return (
     <div className="header__chat">
       <div className="header__name__group">
-        <span>Chilli Chilli</span>
-        <span>25</span>
+        <span>{user?.name}</span>
+        {/* membership numbers */}
+        <span>{}</span>
       </div>
       <div className="header__options">
         <i className="fas fa-video"></i>
@@ -17,7 +21,7 @@ const Header = (props: HeaderProps) => {
       </div>
       <div className="header__avatar">
         <div className="header__avatar__item__personal avatar">
-                    <img src="./assets/avatar2.svg" alt="" />
+                    <img src={user?.avatar} alt="" />
                     <div className="icon--active"></div>
                 </div>
         {/* <div className="header__avatar__item">

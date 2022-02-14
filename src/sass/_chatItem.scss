@@ -61,3 +61,8 @@
 .message__item:hover .message__item__client {
   opacity: 1;
 }
+.chat__greetings{
+  color: white;
+  @include flex();
+
+}

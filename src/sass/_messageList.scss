@@ -9,10 +9,10 @@
         display: flex;
         align-items: center;
         font-weight: 600;
-      p {
+      span:first-child {
         font-size: 15px;
       }
-      span {
+      span:last-child {
         color: $blue;
         font-size: 17px;
       }

@@ -1,17 +1,28 @@
-import { configureStore,getDefaultMiddleware } from "@reduxjs/toolkit";
+import { combineReducers, configureStore,getDefaultMiddleware } from "@reduxjs/toolkit";
 import signUpReducer from "./features/auth/signUpSlice";
+import modalReducer from "./features/auth/modalSlice";
+import friendReducer from "./features/chat/friendsSlice";
 import { rootSaga } from "./saga/rootSaga";
 import createSagaMiddleware  from 'redux-saga';
-
+import { connectRouter, routerMiddleware } from "connected-react-router";
+import {history} from './utils'
+import ChatMainReducer from "./features/chat/chatSlice";
 const sagaMiddleware = createSagaMiddleware();
-const middleware = [...getDefaultMiddleware({thunk: false}),sagaMiddleware];
+const middleware = [...getDefaultMiddleware({thunk: false}),sagaMiddleware,routerMiddleware(history)];
+
+const rootReducer = combineReducers({
+    router: connectRouter(history),
+    signUp: signUpReducer,
+    modal: modalReducer,
+    friends: friendReducer,
+    chat: ChatMainReducer,
+})
 export const store = configureStore({
-    reducer: {
-        signUp: signUpReducer,
-    },
+    reducer: rootReducer,
     middleware
 })
 sagaMiddleware.run(rootSaga)
+
 export type RootState = ReturnType<typeof store.getState>
 
 export type AppDispatch = typeof store.dispatch

@@ -1,0 +1,1 @@
+export const ACCESS__TOKEN = "ACCESS__TOKEN__CHAT__APP"

@@ -1,22 +1,27 @@
 import React from "react";
-import { Route, Routes } from "react-router";
+import { Route, Switch } from "react-router";
 import "./App.scss";
-import Detail from "./components/Detail/Detail";
-import MainChat from "./components/MainChat/MainChat";
-import { Menu } from "./components/Menu/Menu";
-import { MessagePanel } from "./components/Messages/MessagePanel";
-import MainPage from "./pages/Home/MainPage";
+import { ACCESS__TOKEN } from "./constants/routes";
 import LoginPage from "./pages/Auth/LoginPage";
 import { SignUpPage } from "./pages/Auth/SignUpPage";
+import MainScreen from "./pages/Home/MainScreen";
+import jwtDecode from "jwt-decode";
+import { getIDUser } from "./utils/auth";
 function App() {
   return (
     <div className="screen">
       <div className="wrapper">
-        <Routes>
-          <Route path="/" element={<LoginPage/>}/>
-          <Route path="/signup" element={<SignUpPage/>}/>
-          <Route path="/me" element={<MainPage/>}/>
-        </Routes>
+        <Switch>
+          <Route exact path="/">
+            <LoginPage />
+          </Route>
+          <Route path="/signup">
+            <SignUpPage />
+          </Route>
+          <Route path="/me">
+            <MainScreen />
+          </Route>
+        </Switch>
       </div>
     </div>
   );
