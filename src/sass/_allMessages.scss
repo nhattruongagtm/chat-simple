@@ -26,7 +26,7 @@
           display: none;
       }
       background-color: transparent;
-    .all__message__item {
+    .all__message__item{
       display: flex;
       border-radius: 15px;
       cursor: pointer;
@@ -85,6 +85,48 @@
         // background-color: $dark-brown;
         background: linear-gradient(to bottom, $dark-brown 40%, rgb(20, 20, 20));
       }
+    }
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .all__message{
+
+    .all__message__item{
+      display: flex;
+      height: fit-content;
+      padding: 15px;
+      margin-bottom: 10px;
+      img {
+        @include avatar(45px);
+      }
+      .notify__name__info {
+        flex-grow: 1;
+        p:first-child {
+          margin-bottom: 10px;
+        }
+        p:last-child {
+        }
+      }
+      .message__item__time {
+        font-size: 14px;
+        max-width: 60px;
+      }
+      .message__item__content {
+
+        &--active {
+          color: white;
+        }
+      }
+    }
+  }
+  .message{
+    font-size: 15px;
+  }
+  .search__frame{
+    height: 45px;
+    input{
+      font-size: 15px;
     }
   }
 }

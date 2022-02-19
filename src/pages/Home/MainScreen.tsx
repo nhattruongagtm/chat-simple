@@ -13,9 +13,12 @@ const MainScreen = (props: Props) => {
   const isDisplayLayer = useSelector((state: RootState) => state.modal.isDisplayLayer);
   const user = useGetUser();
   useEffect(()=>{
-    if(user){
+    let isCancel = false
+  if(user && !isCancel){
       dispatch(requestLoadMessages(user.uid))
     }
+
+    return () => {isCancel = true}
   },[user])
   return (
     <div className="main__screen">

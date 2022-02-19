@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Switch } from "react-router";
 import "./App.scss";
 import { ACCESS__TOKEN } from "./constants/routes";
@@ -7,10 +7,23 @@ import { SignUpPage } from "./pages/Auth/SignUpPage";
 import MainScreen from "./pages/Home/MainScreen";
 import jwtDecode from "jwt-decode";
 import { getIDUser } from "./utils/auth";
+import { useDispatch } from "react-redux";
+import { updateWidth } from "./features/global/deviceSlice";
+export const DeviceWithContext = React.createContext<number>(0)
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const wrapper = document.querySelector("#wrapper");
+    window.addEventListener("resize", () => {
+      if(wrapper){
+        dispatch(updateWidth(wrapper.clientWidth))
+      }
+    });
+  }, []);
+
   return (
     <div className="screen">
-      <div className="wrapper">
+      <div className="wrapper" id="wrapper">
         <Switch>
           <Route exact path="/">
             <LoginPage />
@@ -26,5 +39,4 @@ function App() {
     </div>
   );
 }
-
 export default App;

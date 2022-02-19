@@ -1,16 +1,37 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router";
+import { updateTab } from "../../features/global/deviceSlice";
+import { RootState } from "../../store";
+import { Params } from "../MainChat/ChatFrame";
 
 type DetailProps = {};
 
 const Detail = (props: DetailProps) => {
+  const dispatch = useDispatch();
+  const device = useSelector((state: RootState) => state.device);
+  const isMobile = device.width <= 480 ? true : false;
+  const params = useParams() as Params
+  const {friendID} = params
+
+  useEffect(()=>{
+    
+  },[])
+  
+
   return (
-    <div className="detail__info">
+    <div
+      className={
+        isMobile && device.tab === 2
+          ? 'detail__info detail__info--display' : 'detail__info'
+      }
+    >
       <div className="detail__header">
         <div className="detail__header__title">
           <i className="fas fa-comments"></i>
           <span>Chat Details</span>
         </div>
-        <i className="fas fa-times header__close"></i>
+        <i className="fas fa-times header__close" onClick={()=>dispatch(updateTab(1))}></i>
       </div>
       <div className="detail__figure">
         <div className="detail__photo avatar">

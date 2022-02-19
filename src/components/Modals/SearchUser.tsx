@@ -19,7 +19,9 @@ const SearchUser = (props: Props) => {
   const user = useGetUser()
   
   useEffect(() => {
-    getAllUsers()
+    let isCancel = false;
+    if(!isCancel){
+      getAllUsers()
       .then((res) => {
         if (res) {
           setUsers(res);
@@ -28,6 +30,9 @@ const SearchUser = (props: Props) => {
       .catch((e) => {
         console.log(e);
       });
+    }
+
+    return () =>{ isCancel = true}
       
   }, []);
 

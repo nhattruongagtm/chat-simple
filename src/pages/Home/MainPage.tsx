@@ -8,13 +8,12 @@ interface Props {}
 
 const MainPage = (props: Props) => {
   return (
-    <>
+    <div className="main__page">
       <Menu />
       <MessagePanel />
       <MainChat />
       <Detail />
-
-    </>
+    </div>
   );
 };
 

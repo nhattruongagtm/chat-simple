@@ -1,11 +1,20 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateTab } from "../../features/global/deviceSlice";
+import { RootState } from "../../store";
 import { ChatMainContext } from "./ChatFrame";
 
 interface HeaderProps {}
 
 const Header = (props: HeaderProps) => {
   const user = React.useContext(ChatMainContext)
-
+  const dispatch = useDispatch();
+  const device = useSelector((state: RootState)=>state.device)
+  const handleDisplayDetail = () =>{
+    if(device.width <= 480){
+      dispatch(updateTab(2))
+    }
+  }
   return (
     <div className="header__chat">
       <div className="header__name__group">
@@ -16,11 +25,11 @@ const Header = (props: HeaderProps) => {
       <div className="header__options">
         <i className="fas fa-video"></i>
         <i className="fas fa-phone-alt"></i>
-        <i className="fas fa-file-image"></i>
-        <i className="fas fa-file-alt"></i>
+        <i className="fas fa-file-image header__options__file"></i>
+        <i className="fas fa-file-alt header__options__file" ></i>
       </div>
       <div className="header__avatar">
-        <div className="header__avatar__item__personal avatar">
+        <div className="header__avatar__item__personal avatar" onClick={handleDisplayDetail}>
                     <img src={user?.avatar} alt="" />
                     <div className="icon--active"></div>
                 </div>

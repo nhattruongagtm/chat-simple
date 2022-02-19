@@ -1,7 +1,22 @@
 .main__chat{
     width: 50%;
-    padding: 0 15px;
+    padding: 0 15px 15px 15px;
     display: flex;
     flex-direction: column;
-    
+}
+@media screen and (max-width:768px) {
+    .main__chat{
+        width: calc(100% - 60px);
+    }
+}
+@media screen and (max-width:587px) {
+    .main__chat{
+        width: calc(100%);
+        
+    }
+}
+@media screen and (max-width:480px) {
+    .main__chat{
+        padding-top: 7px;
+    }
 }

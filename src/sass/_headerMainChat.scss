@@ -60,3 +60,23 @@
     }
 
 }
+@media screen and (max-width:768px) {
+    
+}
+@media screen and (max-width:587px) {
+    .header__chat{
+        .header__name__group{
+            flex-grow: 1;
+        }
+        .header__options{
+            width: fit-content;
+            &__file{
+                display: none;
+            }
+        }
+        .header__avatar{
+            max-width: 35px;
+            margin-left: 40px;
+        }
+    }
+}

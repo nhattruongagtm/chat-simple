@@ -16,7 +16,9 @@ const ChatItem = ({own,msg}: ChatItemProps) => {
   return (
       <div className={own === false ? "message__item": "message__item message__item__client"}>
         <div className="avatar message__item__avatar">
-          <img src={user?.avatar} alt="" />
+        <i className="fa-regular fa-circle-check"></i>
+          {/* <img src={user?.avatar} alt=""/> */}
+      {/* <i className="fa-solid fa-circle-check"></i> */}
         </div>
         <div className="message__item__content">
             <p>{msg.content}</p>

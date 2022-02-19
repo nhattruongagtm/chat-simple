@@ -1,8 +1,10 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation, useParams } from "react-router";
 import { requestLoadDetail } from "../../features/chat/chatSlice";
+import { updateTab } from "../../features/global/deviceSlice";
 import { ChatListItem } from "../../models/chat";
+import { RootState } from "../../store";
 import { Params } from "../MainChat/ChatFrame";
 
 type MessaggeItemProps = {
@@ -31,10 +33,14 @@ const MessaggeItem = ({ msg }: MessaggeItemProps) => {
   const dispatch = useDispatch();
   const newMessage = msg.messages[msg.messages.length - 1];
   const path = useLocation().pathname.split("/").pop();
+  const device = useSelector((state: RootState)=>state.device)
 
   const handleLoadDetail = () =>{
     history.push(`/me/${msg.friendID}`)
     path && dispatch(requestLoadDetail(msg.messages))
+    if(device.width <= 480){
+      dispatch(updateTab(1))
+    }
   }
   return (
     <div

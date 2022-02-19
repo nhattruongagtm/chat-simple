@@ -4,6 +4,7 @@
   height: calc(100% - 20px);
   box-shadow: 10px 0 5px 0px $super-dark, -10px 0 5px 0px $super-dark;
   padding: 10px;
+  transition: 0.2s;
   &__info {
     width: calc(100% - 20px);
     max-height: calc(250px - 20px);
@@ -24,8 +25,8 @@
         border-top-left-radius: 30px;
         border-top-right-radius: 30px;
         background-color: $dark-gray;
-        
-        span{
+
+        span {
           display: block;
           width: 35px;
           height: 35px;
@@ -36,7 +37,6 @@
           font-size: 16px;
           color: white;
           margin: -4px;
-
         }
         img {
           @include avatar(35px);
@@ -95,7 +95,7 @@
           height: 35px;
           border-bottom: 1px solid $dark-light;
           cursor: pointer;
-          &:hover{
+          &:hover {
             background-color: #2222225d;
             border-radius: 25px;
           }
@@ -107,7 +107,6 @@
               margin-bottom: 5px;
             }
             p:last-child {
-
             }
           }
           .notify__name__status {
@@ -115,10 +114,10 @@
             text-align: right;
             position: relative;
             i {
-                position: relative;
-                color: $blue;
-                border-radius: 50%;
-                box-shadow: 0 0 10px 5px #2294ff4f;
+              position: relative;
+              color: $blue;
+              border-radius: 50%;
+              box-shadow: 0 0 10px 5px #2294ff4f;
             }
           }
         }
@@ -137,10 +136,10 @@
             color: white;
             @include flex();
             transition: 0.2s;
-            &:hover{
+            &:hover {
               background-color: white;
               color: $blue;
-              box-shadow:  0 2px 1px 2px rgba(0, 89, 255, 0.315);
+              box-shadow: 0 2px 1px 2px rgba(0, 89, 255, 0.315);
             }
           }
           .requests {
@@ -166,19 +165,47 @@
             font-size: 13px;
             font-weight: 400;
             transition: 0.3s;
-            &:hover{
-                opacity: .8;
+            &:hover {
+              opacity: 0.8;
             }
-            i{
+            i {
               font-size: 9px;
-                @include avatar(20px);
-                background-color: $purple;
-                @include flex();
-                box-shadow: 0 0 10px 5px #7722ff69;
+              @include avatar(20px);
+              background-color: $purple;
+              @include flex();
+              box-shadow: 0 0 10px 5px #7722ff69;
             }
           }
         }
       }
     }
+  }
+}
+
+
+@media screen and(max-width: 768px) {
+  .message__panel {
+    transform: translateX(calc(-200% - 20px));
+    width: 0%;
+    overflow: hidden;
+    padding: 0;
+  }
+}
+@media screen and(max-width: 480px) {
+  .message__panel {
+    background-color: black;
+    transform: translateX(0%);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(100% - 30px);
+    overflow: hidden;
+    padding: 15px;
+    height: calc(100% - 30px - 70px);
+    z-index: 10;
+    font-size: 18px;
+  }
+  .message__panel--display {
+    transform: translateX(-100%) !important;
   }
 }

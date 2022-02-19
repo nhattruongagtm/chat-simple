@@ -35,3 +35,14 @@
     display: flex;
   }
 }
+
+@media screen and (max-width: 480px) {
+  .screen{
+    background-color: black;
+  }
+  .wrapper{
+    width: 100%;
+    height: 100%;
+
+  }
+}

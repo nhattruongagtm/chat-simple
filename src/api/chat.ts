@@ -6,15 +6,18 @@ import {
   getDoc,
   getDocs,
   onSnapshot,
+  query,
   setDoc,
   updateDoc,
+  where,
 } from "firebase/firestore";
-import { db } from "../config/firebase";
+import firebase, { db } from "../config/firebase";
 import { Friend, User } from "../models/auth";
 import { ChatItem, ChatList, ChatListItem } from "../models/chat";
 import { getUserByID } from "./firestore";
+
 const USER_DOC = "users";
-const MESSAGES_DOC = "messages";
+export const MESSAGES_DOC = "messages";
 export const addFriend = async (uid: string, fid: string, type: number = 0) => {
   const userRef = doc(db, USER_DOC, uid);
   const friendRef = doc(db, USER_DOC, fid);
@@ -117,7 +120,7 @@ export const getListMessagesWithFriends = async (uid: string): Promise<any> => {
     });
   });
 };
-const getFriendID = (uid: string, array: string[]) => {
+export const getFriendID = (uid: string, array: string[]) => {
   for (let i = 0; i < array.length; i++) {
     if (array[i] === uid) {
       return array[i + 1];
@@ -127,21 +130,40 @@ const getFriendID = (uid: string, array: string[]) => {
   }
   return "";
 };
-export const getChatList = async (uid: string): Promise<ChatList> => {
+export const getAllMessageByUser = async (uid: string): Promise<string[]> => {
   const friendRef = await getDocs(collection(db, MESSAGES_DOC));
+  const result: string[] = [];
+  let count = 0;
+  return new Promise((resolve) => {
+    friendRef.forEach((doc) => {
+      count++;
+      if (doc.exists()) {
+        if (doc.id.indexOf(uid) !== -1) {
+          result.push(doc.id);
+        }
+      }
+      if (count === friendRef.size - 1) {
+        resolve(result);
+      }
+    });
+  });
+};
+
+export const getChatList = async (uid: string): Promise<ChatList> => {
+  const list = await getAllMessageByUser(uid);
+
   return new Promise((resolve) => {
     try {
       let messagesList: ChatListItem[] = [];
       let chatList: ChatList = { images: [], messages: [] };
-      friendRef.forEach(async (doc) => {
-        if (doc.exists()) {
-          if (doc.id.indexOf(uid) !== -1) {
+
+      for (let i = 0; i < list.length; i++) {
+        const ref = doc(db, MESSAGES_DOC, list[i]);
+        onSnapshot(ref, async (doc) => {
+          if (doc.exists()) {
             const ids = doc.id.split("-");
             const messages = doc.data().messages as ChatItem[];
-            
-            // get user info
             const friend = await getUserByID(getFriendID(uid, ids));
-            
             if (friend) {
               const chatItem: ChatListItem = {
                 friendID: friend.uid,
@@ -151,24 +173,73 @@ export const getChatList = async (uid: string): Promise<ChatList> => {
                 messages: messages,
                 status: true,
               };
-              messagesList = [...messagesList,chatItem]
+
+              messagesList = [...messagesList, chatItem];
             }
-            chatList = {...chatList,messages: messagesList};
-            
-            if(chatList.messages.length === friendRef.size){
-              resolve(chatList)
+            chatList = { ...chatList, messages: messagesList };
+            if (messagesList.length === list.length) {
+              resolve(chatList);
             }
           }
-          
-
-
-
-        }
-        
-      });
-      
+        });
+      }
     } catch (e) {
       console.log(e);
     }
   });
 };
+export const getChatList2 = async (uid: string): Promise<ChatList> => {
+  const friendRef = await getDocs(collection(db, MESSAGES_DOC));
+
+  return new Promise((resolve) => {
+    try {
+      let messagesList: ChatListItem[] = [];
+      let chatList: ChatList = { images: [], messages: [] };
+      friendRef.forEach(async (doc) => {
+        if (doc.exists()) {
+          if (doc.id.indexOf(uid) !== -1) {
+            // onSnapshot(a,(d)=>{
+            //   console.log("snapshot",d.data())
+            // })
+            const ids = doc.id.split("-");
+            const messages = doc.data().messages as ChatItem[];
+
+            // get user info
+            const friend = await getUserByID(getFriendID(uid, ids));
+
+            if (friend) {
+              const chatItem: ChatListItem = {
+                friendID: friend.uid,
+                name: `${friend.firstName} ${friend.lastName}`,
+                avatar: friend.photoUrl,
+                isActive: false,
+                messages: messages,
+                status: true,
+              };
+              messagesList = [...messagesList, chatItem];
+            }
+            chatList = { ...chatList, messages: messagesList };
+
+            if (chatList.messages.length === friendRef.size) {
+              resolve(chatList);
+            }
+          }
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  });
+};
+export const sendMessage = (message: ChatItem) =>{
+  const ref = doc(db,MESSAGES_DOC,message.id)
+
+  setDoc(ref,{
+    ...message
+  })
+
+  // i don't kwow any way to access ref {images:[],messages:[]}
+  
+
+
+}

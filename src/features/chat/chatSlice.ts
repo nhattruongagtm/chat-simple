@@ -40,6 +40,7 @@ const ChatMainReducer = createSlice({
     requestLoadDetailFail: (state, action: PayloadAction<ChatItem[]>) => {},
     requestSendMessage: (state, action: PayloadAction<ChatItem>) => {
       state.sendLoading = true;
+      state.chatDetail.push(action.payload) 
     },
     requestSendMessageSuccess: (state, action: PayloadAction<ChatItem>) => {
       state.sendLoading = true;

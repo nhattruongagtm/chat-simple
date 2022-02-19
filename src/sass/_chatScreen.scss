@@ -1,7 +1,7 @@
 .chat__screen{
     flex-grow: 1;
     overflow-y: scroll;
-
+    transition: 0.2s;
     &__main{
         padding: 15px 10px;
         height: fit-content;
@@ -17,5 +17,15 @@
         width: 7px;
         background-color: rgb(199, 199, 199);
         border-radius: 15px;
+    }
+}
+@media screen and (max-width:768px) {
+    
+}
+@media screen and (max-width:587px) {
+    .chat__screen{
+        &__main{
+            padding: 10px 0;
+        }
     }
 }

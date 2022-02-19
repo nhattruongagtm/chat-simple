@@ -1,0 +1,27 @@
+.navigation__bottom{
+    @include flex();
+    height: 50px;
+    width: 100%;
+    background-color: $dark-gray-light;
+    margin-top: 15px;
+    color: whitesmoke;
+    border-radius: 15px;
+    gap: 0 20px;
+    &__item{
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+        @include flex();
+        border-radius: inherit;
+        cursor: pointer;
+        &:hover{
+            background-color: $text-color
+        }
+    }
+
+}
+@media screen and(min-width: 769px) {
+    .navigation__bottom{
+        display: none;
+    }
+}

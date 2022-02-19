@@ -2,11 +2,17 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   cursor: pointer;
 
   img {
-    @include avatar(20px);
+    @include avatar(16px);
+  }
+  &__avatar{
+    i{
+      font-size: 15px;
+      color: rgb(218, 218, 218);
+    }
   }
 
   &__content {
@@ -65,4 +71,12 @@
   color: white;
   @include flex();
 
+}
+@media screen and (max-width: 480px) {
+  .message__item{
+    gap: 5px;
+    &__more{
+      margin-right: 5px;
+    }
+  }
 }
