@@ -5,6 +5,7 @@
   display: flex;
 
   &__container {
+    width: 100%;
     padding: 30px 60px;
   }
 
@@ -61,7 +62,7 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
-    width: 450px;
+    width: 80%;
     .signup__item {
       padding: 8px;
       background-color: $dark-gray;
@@ -181,5 +182,38 @@
  
     }
     
+  }
+}
+
+@media screen and(max-width: 1024px) {
+  .signup{
+    &__form{
+      width: 100%;
+    }
+  }
+  .background{
+    width: 50%!important;
+  }
+}
+@media screen and(max-width: 768px) {
+  .background{
+    width: 0%!important;
+  }
+}
+@media screen and(max-width: 480px) {
+  .signup{
+    &__container {
+      padding: 30px 20px;
+    }
+    &__name{
+      flex-direction: column;
+      gap: 15px;
+      &>div{
+        width: calc(100% - 20px)!important;
+        input{
+          width: calc(100% - 20px)!important;
+        }
+      }
+    }
   }
 }
