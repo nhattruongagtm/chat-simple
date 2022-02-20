@@ -231,15 +231,12 @@ export const getChatList2 = async (uid: string): Promise<ChatList> => {
     }
   });
 };
-export const sendMessage = (message: ChatItem) =>{
-  const ref = doc(db,MESSAGES_DOC,message.id)
+export const sendMessage = (id: string, content: ChatItem) => {
+  const ref = doc(db, MESSAGES_DOC, id);
 
-  setDoc(ref,{
-    ...message
-  })
+  updateDoc(ref, {
+    messages: arrayUnion(content),
+  });
 
   // i don't kwow any way to access ref {images:[],messages:[]}
-  
-
-
-}
+};

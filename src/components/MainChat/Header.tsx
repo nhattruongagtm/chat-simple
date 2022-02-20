@@ -7,7 +7,7 @@ import { ChatMainContext } from "./ChatFrame";
 interface HeaderProps {}
 
 const Header = (props: HeaderProps) => {
-  const user = React.useContext(ChatMainContext)
+  const user = React.useContext(ChatMainContext)?.content
   const dispatch = useDispatch();
   const device = useSelector((state: RootState)=>state.device)
   const handleDisplayDetail = () =>{

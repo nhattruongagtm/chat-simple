@@ -8,7 +8,7 @@ interface ChatItemProps {
 }
 
 const ChatItem = ({own,msg}: ChatItemProps) => {
-  const user = useContext(ChatMainContext)
+  const user = useContext(ChatMainContext)?.content
 
   if(!msg.content){
     return <h1 className="chat__greetings">Nhắn tin với {user?.name} nhé!</h1>
@@ -21,7 +21,7 @@ const ChatItem = ({own,msg}: ChatItemProps) => {
       {/* <i className="fa-solid fa-circle-check"></i> */}
         </div>
         <div className="message__item__content">
-            <p>{msg.content}</p>
+            <p>{msg.content}</p>  
           
           <div className="message__item__features"></div>
         </div>

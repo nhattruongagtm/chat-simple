@@ -1,5 +1,5 @@
 .input__chat {
-  height: 35px;
+  min-height: 35px;
   width: calc(100% - 40px);
   background-color: $dark;
   // margin-bottom: 20px;
@@ -66,9 +66,13 @@
       display: none;
     }
   }
+  input{
+    // font-size: 14px;
+  }
   .input__attach {
     gap: 0px;
-
+    
+    
     &>i:first-child{
       display: none;
     }

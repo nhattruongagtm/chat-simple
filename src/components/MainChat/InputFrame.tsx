@@ -2,16 +2,21 @@ import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { requestSendMessage, requestSendMessageSuccess } from "../../features/chat/chatSlice";
 import useGetUser from "../../hooks/useGetUser";
-import { ChatItem } from "../../models/chat";
+import { ChatItem, ChatListItem } from "../../models/chat";
 import { RootState } from "../../store";
 import { ChatMainContext } from "./ChatFrame";
 
-interface InputFrameProps {}
+export interface MessageModel{
+  id: string
+  content: ChatItem
+}
 
-const InputFrame = (props: InputFrameProps) => {
+
+const InputFrame = () => {
   const [inputText, setInputText] = useState<string>("");
   const hostUser = useGetUser();
   const dispatch = useDispatch();
+  const id = useContext(ChatMainContext)?.id
 
   const msg = useSelector((state: RootState) => state.chat.chatDetail);
 
@@ -29,7 +34,10 @@ const InputFrame = (props: InputFrameProps) => {
         sendStatus: 0,
         status: 0,
       };
-      dispatch(requestSendMessage(chatItem));
+      if(id){
+        dispatch(requestSendMessage({id: id, content: chatItem}));
+      }
+      // message(chatItem)
       setInputText("");
     }
   };

@@ -2,6 +2,7 @@ import { doc, onSnapshot } from "firebase/firestore";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
+import { Collection } from "typescript";
 import { getAllMessageByUser, getFriendID, MESSAGES_DOC } from "../../api/chat";
 import { getUserByID } from "../../api/firestore";
 import { db } from "../../config/firebase";
@@ -17,8 +18,11 @@ interface Props {}
 export interface Params {
   friendID: string;
 }
-export const ChatMainContext = React.createContext<ChatListItem | null>(null);
-
+export const ChatMainContext = React.createContext<ChatCollection | null>(null);
+export interface ChatCollection{
+  id: string,
+  content: ChatListItem
+}
 const ChatFrame = (props: Props) => {
   const dispatch = useDispatch()
   const params = useParams() as Params;
@@ -27,7 +31,7 @@ const ChatFrame = (props: Props) => {
     (state: RootState) => state.chat.chatList.messages
   );
   const chatDetail = useSelector((state: RootState) => state.chat.chatDetail);
-  const [chatFrame, setChatFrame] = useState<ChatListItem>();
+  const [chatFrame, setChatFrame] = useState<ChatCollection>();
 
   // useEffect(() => {
   //   let isCancel = false
@@ -39,7 +43,7 @@ const ChatFrame = (props: Props) => {
   //   return ()=>{
   //     isCancel = true
   //   }
-  // }, [chatDetail]);
+  // }, [params,chatDetail]);
 
   useEffect(() => {
     let isCancel = false;
@@ -79,13 +83,17 @@ const ChatFrame = (props: Props) => {
                       messages: messages,
                       status: true,
                     };
-                    messagesList = chatItem;
                     const endTime = Date.now()
+                    messagesList = chatItem;
 
                     const waitTime = (endTime - startTime)/1000
                     
                     dispatch(updateLoadingTime(waitTime+0.2))
-                    setChatFrame(messagesList);
+                    const collection: ChatCollection ={
+                      id: friendID,
+                      content: chatItem,
+                    }
+                    setChatFrame(collection);
                   }
                 }
               });
@@ -104,8 +112,12 @@ const ChatFrame = (props: Props) => {
     };
   }, [params, chatMain]);
 
+  // const handleGetMessage = (msg: ChatItem) =>{
+  //   chatFrame && setChatFrame({...chatFrame,messages: [...chatFrame.messages,msg]})
+  // }
+
   return (
-    <ChatMainContext.Provider value={chatFrame as ChatListItem}>
+    <ChatMainContext.Provider value={chatFrame as ChatCollection}>
       <Header />
       <ChatScreen />
       <InputFrame />

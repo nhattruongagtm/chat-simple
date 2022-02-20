@@ -15,30 +15,7 @@ interface MessagePanelProps {}
 interface AvatarProps {
   name: string;
 }
-const fakes = [
-  {
-    uid: "sdfsd",
-    firstName: "Nhat",
-    lastName: "Truong",
-    createdDate: Date.now(),
-    email: "nhattruongagtm@gmail.com",
-    password: "",
-    photoUrl:
-      "https://toigingiuvedep.vn/wp-content/uploads/2022/01/hinh-anh-avatar-cute-meo-simmy-600x600.jpg",
-    friends: [],
-  },
-  {
-    uid: "sdfsd",
-    firstName: "Black",
-    lastName: "Siu",
-    createdDate: Date.now(),
-    email: "nhattruongagtm@gmail.com",
-    password: "",
-    photoUrl:
-      "https://pdp.edu.vn/wp-content/uploads/2021/01/anh-avatar-dep-dai-dien-facebook-zalo.jpg",
-    friends: [],
-  },
-];
+
 
 export const MessagePanel = (props: MessagePanelProps) => {
   const dispatch = useDispatch();
@@ -46,6 +23,7 @@ export const MessagePanel = (props: MessagePanelProps) => {
   const device = useSelector((state: RootState) => state.device);
   const isMobile = device.width <= 480 ? true : false;
   const loadingTime = device.loadingTime;
+
 
   const handleSearchUser = () => {
     dispatch(openSearchUserPopup());
@@ -74,13 +52,12 @@ export const MessagePanel = (props: MessagePanelProps) => {
     dispatch(requestAddFriend({ uid: user?.uid as string, fid: uid, type: 1 }));
   };
 
-  useEffect(() => {
-    const messagePanel = document.getElementById("message");
-
-    if (messagePanel) {
-      messagePanel.style.transition = `${loadingTime}s`;
-    }
-  }, [loadingTime]);
+  // useEffect(() => {
+  //   const messagePanel = document.getElementById("message");
+  //   if (messagePanel) {
+  //     messagePanel.style.transition = `${0.5}s`;
+  //   }
+  // }, [loadingTime]);
   return (
     <div
       className={

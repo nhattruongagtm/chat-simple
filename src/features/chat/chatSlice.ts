@@ -1,4 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { ChatCollection } from "../../components/MainChat/ChatFrame";
+import { MessageModel } from "../../components/MainChat/InputFrame";
 import { ChatItem, ChatList } from "../../models/chat";
 
 const initialState: InitialState = {
@@ -38,9 +40,10 @@ const ChatMainReducer = createSlice({
       state.chatDetail = action.payload;
     },
     requestLoadDetailFail: (state, action: PayloadAction<ChatItem[]>) => {},
-    requestSendMessage: (state, action: PayloadAction<ChatItem>) => {
+    requestSendMessage: (state, action: PayloadAction<MessageModel>) => {
       state.sendLoading = true;
-      state.chatDetail.push(action.payload) 
+      // state.chatDetail.push(action.payload.) 
+      
     },
     requestSendMessageSuccess: (state, action: PayloadAction<ChatItem>) => {
       state.sendLoading = true;

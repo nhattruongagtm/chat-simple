@@ -1,6 +1,6 @@
 .navigation__bottom{
     @include flex();
-    height: 50px;
+    min-height: 50px;
     width: 100%;
     background-color: $dark-gray-light;
     margin-top: 15px;

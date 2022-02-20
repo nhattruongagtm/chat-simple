@@ -83,9 +83,33 @@
       }
       &:hover, &--active{
         // background-color: $dark-brown;
-        background: linear-gradient(to bottom, $dark-brown 40%, rgb(20, 20, 20));
+        background: linear-gradient(to bottom, $dark-gray-light 40%, rgb(20, 20, 20));
       }
     }
+    @keyframes loading {
+      0%{
+        background-position-x: 0%;
+        opacity: 0;
+      }
+      50%{
+        background-position-x: 50%;
+        opacity: 1;
+        
+      }
+      100%{
+        background-position-x: 0%;
+        opacity: 0;
+      }
+    }
+    .all__message__item--layer{
+      border-radius: 15px;
+      background: linear-gradient(-90deg,rgb(26, 26, 26)20%,rgb(46, 46, 46) 50%,rgb(15, 15, 15));
+      animation: loading 2s infinite;
+      background-size: 200%;
+      height: 80px;
+      margin-bottom: 10px;
+    }
+    
   }
 }
 

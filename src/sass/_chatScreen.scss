@@ -1,10 +1,11 @@
 .chat__screen{
     flex-grow: 1;
     overflow-y: scroll;
-    transition: 0.2s;
+    transition: 0.4s;
     &__main{
         padding: 15px 10px;
         height: fit-content;
+        transition: 0.5s;
         // height: 600px;
         // background-color: rgb(24, 24, 24);
     }
@@ -27,5 +28,13 @@
         &__main{
             padding: 10px 0;
         }
+    }
+    .chat__screen::-webkit-scrollbar{
+        width: 0px;
+    }
+}
+@media screen and (max-width:480px) {
+    .chat__screen{
+        font-size: 17px;
     }
 }
