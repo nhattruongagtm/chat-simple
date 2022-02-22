@@ -6,12 +6,13 @@ import { updateTab } from "../../features/global/deviceSlice";
 import { ChatListItem } from "../../models/chat";
 import { RootState } from "../../store";
 import { Params } from "../MainChat/ChatFrame";
+import { Avatar } from "./MessagePanel";
 
 type MessaggeItemProps = {
   msg: ChatListItem;
 };
 
-const getTime = (number: number) => {
+export const getTime = (number: number) => {
   let result = "";
   const now = Date.now();
   const second = (now - number) / 1000;
@@ -52,18 +53,23 @@ const MessaggeItem = ({ msg }: MessaggeItemProps) => {
       onClick={handleLoadDetail}
     >
       <div className="message__item__avatar">
-        <img
+      {
+         msg.avatar!=="" ? (
+          <img
           src={msg.avatar}
           alt=""
-          className="message__user__notify__avatar"
         />
+         ): (
+           <Avatar name={msg.name}/>
+         )
+       }
         <div className="icon--active"></div>
       </div>
       <div className="notify__name__info message__item__name">
         <p className="name">{msg.name}</p>
-        <p className="message message__item__content message__item__content--active">
-          {newMessage.content !== null
-            ? newMessage.content
+        <p className="message message__item__content message__item__content--activ e">
+          {newMessage.content.text !== ''
+            ? newMessage.content.text
             : `Nhắn tin ngay với ${msg.name} ngay!`}
         </p>
       </div>

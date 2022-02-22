@@ -6,7 +6,10 @@ import { Collection } from "typescript";
 import { getAllMessageByUser, getFriendID, MESSAGES_DOC } from "../../api/chat";
 import { getUserByID } from "../../api/firestore";
 import { db } from "../../config/firebase";
-import { updateLoadingTime, updateTab } from "../../features/global/deviceSlice";
+import {
+  updateLoadingTime,
+  updateTab,
+} from "../../features/global/deviceSlice";
 import useGetUser from "../../hooks/useGetUser";
 import { ChatItem, ChatListItem } from "../../models/chat";
 import { RootState } from "../../store";
@@ -19,12 +22,12 @@ export interface Params {
   friendID: string;
 }
 export const ChatMainContext = React.createContext<ChatCollection | null>(null);
-export interface ChatCollection{
-  id: string,
-  content: ChatListItem
+export interface ChatCollection {
+  id: string;
+  content: ChatListItem;
 }
 const ChatFrame = (props: Props) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const params = useParams() as Params;
   const uid = useGetUser()?.uid;
   const chatMain = useSelector(
@@ -33,22 +36,9 @@ const ChatFrame = (props: Props) => {
   const chatDetail = useSelector((state: RootState) => state.chat.chatDetail);
   const [chatFrame, setChatFrame] = useState<ChatCollection>();
 
-  // useEffect(() => {
-  //   let isCancel = false
-  //   const chatSent = chatDetail[chatDetail.length - 1]
-  //   if(!isCancel && chatFrame){
-  //     const item: ChatListItem = {...chatFrame,messages: [...chatFrame.messages,chatSent]}
-  //     setChatFrame(item)
-  //   }
-  //   return ()=>{
-  //     isCancel = true
-  //   }
-  // }, [params,chatDetail]);
-
   useEffect(() => {
     let isCancel = false;
     const displayAllMessages = async () => {
-      const startTime = Date.now();
       try {
         const user = chatMain.find((item) => item.friendID === params.friendID);
         if (uid) {
@@ -83,16 +73,13 @@ const ChatFrame = (props: Props) => {
                       messages: messages,
                       status: true,
                     };
-                    const endTime = Date.now()
                     messagesList = chatItem;
 
-                    const waitTime = (endTime - startTime)/1000
-                    
-                    dispatch(updateLoadingTime(waitTime+0.2))
-                    const collection: ChatCollection ={
+                    const collection: ChatCollection = {
                       id: friendID,
                       content: chatItem,
-                    }
+                    };
+
                     setChatFrame(collection);
                   }
                 }
@@ -110,11 +97,7 @@ const ChatFrame = (props: Props) => {
     return () => {
       isCancel = true;
     };
-  }, [params, chatMain]);
-
-  // const handleGetMessage = (msg: ChatItem) =>{
-  //   chatFrame && setChatFrame({...chatFrame,messages: [...chatFrame.messages,msg]})
-  // }
+  }, [params]);
 
   return (
     <ChatMainContext.Provider value={chatFrame as ChatCollection}>

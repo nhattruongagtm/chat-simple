@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { requestAddFriend } from "../../features/chat/friendsSlice";
 import useGetUser from "../../hooks/useGetUser";
 import { User } from "../../models/auth";
+import { Avatar } from "../Messages/MessagePanel";
 
 type SearchUserItemProps = {
   user: User;
@@ -28,10 +29,16 @@ const SearchUserItem = ({ user, isFriend }: SearchUserItemProps) => {
   return (
     <div className="search__user__list__item" key={user.uid}>
       <div className="avatar search__user__avatar">
-        <img
-          src={user.photoUrl !== "" ? user.photoUrl : "./assets/avatar1.svg"}
+       {
+         user.photoUrl!=="" ? (
+          <img
+          src={user.photoUrl}
           alt=""
         />
+         ): (
+           <Avatar name={user.firstName}/>
+         )
+       }
       </div>
       <p className="search__user__name">{`${user.firstName} ${user.lastName}`}</p>
       <p className="search__user__familiar">(30 mutual friends) </p>

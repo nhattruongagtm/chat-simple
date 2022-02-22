@@ -96,7 +96,7 @@ $border: rgb(129, 129, 129);
         .search__user {
           &__avatar {
             img {
-              @include avatar(40px);
+              @include avatar(35px);
             }
           }
 

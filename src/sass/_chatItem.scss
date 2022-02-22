@@ -1,21 +1,41 @@
 .message__item {
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end;
   gap: 10px;
   margin-bottom: 5px;
   cursor: pointer;
 
-  img {
-    @include avatar(16px);
+  &__attach {
+    border-radius: 5px;
+    overflow: hidden;
+    width: 300px;
+    max-width: 300px;
+    background-color: $blue;
+    margin-bottom: 5px;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+
+    img {
+      max-width: 100%;
+    }
   }
-  &__avatar{
-    i{
+
+  .message__item__avatar {
+    img {
+      @include avatar(16px);
+    }
+  }
+  &__avatar {
+    align-self: flex-end;
+    i {
       font-size: 15px;
       color: rgb(218, 218, 218);
     }
   }
 
   &__content {
+    display: flex;
+    flex-direction: column;
     p {
       width: fit-content;
       padding: 8px 10px;
@@ -47,14 +67,16 @@
         color: rgb(240, 240, 240);
       }
     }
-    &__time{
+    &__time {
       font-size: 12px;
       text-align: center;
     }
   }
-  &__client {
+  &--client {
     flex-direction: row-reverse;
+
     .message__item__content {
+      align-items: flex-end;
       p {
         background-color: $blue;
       }
@@ -67,17 +89,32 @@
 .message__item:hover .message__item__client {
   opacity: 1;
 }
-.chat__greetings{
+.chat__greetings {
   color: white;
   @include flex();
+}
 
+.space__time{
+  padding: 50px 0;
+  p{
+    text-align: center;
+    color: white;
+  }
+}
+.empty__space{
+  padding: 10px 0;
+  background-color: blue;
 }
 @media screen and (max-width: 480px) {
-  .message__item{
+  .message__item {
     gap: 5px;
     margin-bottom: 10px;
-    &__more{
+    &__more {
       margin-right: 5px;
+    }
+    &__attach {
+      width: 200px;
+      max-width: 200px;
     }
   }
 }

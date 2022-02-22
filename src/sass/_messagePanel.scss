@@ -20,6 +20,69 @@
       .message__user__header {
         display: flex;
       }
+      @keyframes skeleton {
+        0% {
+          background-position-x: 0%;
+        }
+        50% {
+          background-position-x: 50%;
+        }
+        100% {
+          background-position-x: 0%;
+        }
+      }
+      .name--skeleton,
+      .message--skeleton,
+      .avatar--skeleton,
+      .notify--skeleton,
+      .message__panel__avatar--skeleton > div {
+        background: linear-gradient(
+          -90deg,
+          rgb(26, 26, 26) 20%,
+          rgb(39, 39, 39) 50%,
+          rgb(15, 15, 15)
+        );
+        background-size: 200%;
+        animation: skeleton 2s backwards infinite;
+      }
+      .message__user__header--skeleton {
+        display: flex;
+        width: 100%;
+        height: 54px;
+        .message__panel__name__main {
+          width: 100%;
+        }
+        .name--skeleton {
+          width: 70%;
+          height: 20px;
+          background-color: gray;
+          border-radius: 5px;
+        }
+        .message--skeleton {
+          width: 60%;
+          height: 15px;
+          border-radius: 5px;
+          background-color: gray;
+        }
+      }
+      .message__panel__avatar--skeleton {
+        div,
+        .avatar--skeleton {
+          @include avatar(35px);
+          border: 3px solid $dark-gray-light;
+        }
+      }
+      .avatar--skeleton {
+        @include avatar(35px);
+      }
+      .notify--skeleton {
+        display: block;
+        width: 100%;
+        height: 11px;
+        border-radius: 5px;
+        background-color: gray;
+      }
+
       .message__panel__avatar {
         padding: 4px;
         border-top-left-radius: 30px;
@@ -181,7 +244,6 @@
     }
   }
 }
-
 
 @media screen and(max-width: 768px) {
   .message__panel {

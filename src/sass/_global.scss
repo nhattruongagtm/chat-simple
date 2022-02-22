@@ -20,7 +20,9 @@ body {
 }
 .avatar {
   position: relative;
+
   img {
+    
   }
   .icon--active {
     position: absolute;
@@ -32,4 +34,13 @@ body {
     height: 8px;
     border: 2px solid $dark;
   }
+}
+.avatar--no{
+  @include flex();
+  background-color: rgb(197, 197, 255);
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  font-size: 18px;
+  color: black;
 }

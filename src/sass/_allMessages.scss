@@ -20,7 +20,7 @@
   }
   &__main {
       overflow-y: scroll;
-      max-height: 250px;
+      // height: 250px;
       flex-grow: 1;
       &::-webkit-scrollbar{
           display: none;
@@ -35,7 +35,7 @@
       align-items: flex-start;
       border-bottom: 1px solid $dark-light;
       padding: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       transition: 0.2s;
       img {
         @include avatar(35px);
@@ -76,7 +76,7 @@
         -webkit-line-clamp: 1; // số dòng muốn hiển thị
         -webkit-box-orient: vertical;
         display: -webkit-box;
-
+        color: rgb(199, 199, 199);
         &--active {
           color: white;
         }
@@ -103,10 +103,10 @@
     }
     .all__message__item--layer{
       border-radius: 15px;
-      background: linear-gradient(-90deg,rgb(26, 26, 26)20%,rgb(46, 46, 46) 50%,rgb(15, 15, 15));
+      background: linear-gradient(-90deg,rgb(26, 26, 26)20%,rgb(39, 39, 39) 50%,rgb(15, 15, 15));
       animation: loading 2s infinite;
       background-size: 200%;
-      height: 80px;
+      height: 60px;
       margin-bottom: 10px;
     }
     
@@ -152,5 +152,8 @@
     input{
       font-size: 15px;
     }
+  }
+  .all__message__item--layer{
+    height: 80px!important;
   }
 }

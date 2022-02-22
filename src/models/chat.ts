@@ -2,10 +2,26 @@ export interface Emoji{
     type: 'like' | 'angry' | 'smile'
     number: number
 }
+interface CallTime{
+    hour: number,
+    minute: number,
+    second: number,
+}
+interface CallFile{
+    id: string,
+    duration: CallTime,
+    status: number,
+}
+export interface ContentFile{
+    text: string,
+    media: string[],
+    video: string,
+    sticker: string
+}
 export interface ChatItem{
     ownID: string
     id: string
-    content: string | null
+    content: ContentFile 
     createdDate: number
     emojo: Emoji[]
     // message status: 0 is delete, 1 is display, 2 is recall

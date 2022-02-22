@@ -1,10 +1,11 @@
 import { FacebookAuthProvider, GoogleAuthProvider } from "firebase/auth";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { facebookProvider, googleProvider } from "../../config/authMethods";
 import { requestLogin } from "../../features/auth/signUpSlice";
 import socialAuth from "../../service/auth";
+import { RootState } from "../../store";
 
 interface LoginPageProps {}
 interface LoginInput {
@@ -16,6 +17,9 @@ const LoginPage = (props: LoginPageProps) => {
     email: "",
     password: "",
   });
+
+  const loading = useSelector((state: RootState)=>state.signUp.isLoading)
+
   const [isTooglePassword, setIsTooglePassword] = useState<boolean>(false);
   const history = useHistory();
   const dispatch = useDispatch();
@@ -97,7 +101,7 @@ const LoginPage = (props: LoginPageProps) => {
               Forgot Password
             </button>
             <button type="submit" className="signup__submit">
-              Login
+              {loading ? 'Processing...' : 'Login'}
             </button>
           </div>
         </form>

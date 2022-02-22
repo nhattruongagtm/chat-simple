@@ -1,6 +1,4 @@
-import {
-  doc, onSnapshot
-} from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { getAllMessageByUser, getFriendID, MESSAGES_DOC } from "../../api/chat";
@@ -17,18 +15,18 @@ const AllMessages = (props: Props) => {
   const loadMessage = useSelector((state: RootState) => state.chat);
   const { loading, chatList } = loadMessage;
   const [messages, setMessages] = useState<ChatListItem[]>();
-  // const [messages, setMessages] = useState<ChatListItem[]>();
   const uid = useGetUser()?.uid;
-  const size = useRef<number>(chatList.messages.length);
+  const size = useRef<number>(0);
   const messagesRef = useRef<ChatListItem[]>([]);
-
   useEffect(() => {
     let isCancel = false;
     const displayAllMessages = async () => {
       if (uid) {
         const list = await getAllMessageByUser(uid);
         let result: ChatListItem[] = [];
+
         size.current = list.length;
+
         for (let i = 0; i < list.length; i++) {
           const ref = doc(db, MESSAGES_DOC, list[i]);
           onSnapshot(ref, async (doc) => {
@@ -58,9 +56,9 @@ const AllMessages = (props: Props) => {
                 messagesRef.current = result;
 
                 if (!isCancel) {
-                  setTimeout(() => {
-                    setMessages(messagesRef.current);
-                  }, 1000);
+                  // setTimeout(() => {
+                  setMessages(messagesRef.current);
+                  // }, 1000);
                 }
               }
             }

@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateTab } from "../../features/global/deviceSlice";
 import { RootState } from "../../store";
+import { Avatar } from "../Messages/MessagePanel";
 import { ChatMainContext } from "./ChatFrame";
 
 interface HeaderProps {}
@@ -30,7 +31,16 @@ const Header = (props: HeaderProps) => {
       </div>
       <div className="header__avatar">
         <div className="header__avatar__item__personal avatar" onClick={handleDisplayDetail}>
-                    <img src={user?.avatar} alt="" />
+        { user &&
+         user.avatar!=="" ? (
+          <img
+          src={user.avatar}
+          alt=""
+        />
+         ): (user && user.avatar === '') && (
+           <Avatar name={user.name}/>  
+         )
+       }
                     <div className="icon--active"></div>
                 </div>
         {/* <div className="header__avatar__item">

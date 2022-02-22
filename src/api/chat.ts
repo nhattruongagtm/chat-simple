@@ -13,10 +13,10 @@ import {
 } from "firebase/firestore";
 import firebase, { db } from "../config/firebase";
 import { Friend, User } from "../models/auth";
-import { ChatItem, ChatList, ChatListItem } from "../models/chat";
+import { ChatItem, ChatList, ChatListItem, ContentFile } from "../models/chat";
 import { getUserByID } from "./firestore";
 
-const USER_DOC = "users";
+export const USER_DOC = "users";
 export const MESSAGES_DOC = "messages";
 export const addFriend = async (uid: string, fid: string, type: number = 0) => {
   const userRef = doc(db, USER_DOC, uid);
@@ -51,10 +51,10 @@ export const addFriend = async (uid: string, fid: string, type: number = 0) => {
     });
 
     await updateDoc(userRef, {
-      friends: arrayUnion({ ...friendAddType, accept: true }),
+      friends: arrayUnion({ ...friendAddType, type: 0, accept: true }),
     });
     await updateDoc(friendRef, {
-      friends: arrayUnion({ ...friendReceiveType, accept: true }),
+      friends: arrayUnion({ ...friendReceiveType, type: 0, accept: true }),
     });
 
     createMessageCollection(uid, fid);
@@ -84,6 +84,12 @@ export const getWaitingList = async (
   }
 };
 export const createMessageCollection = async (uid: string, fid: string) => {
+  const initialValue: ContentFile = {
+    media: [],
+    text: "",
+    sticker: "",
+    video: "",
+  };
   try {
     const messageRef = doc(db, MESSAGES_DOC, `${uid}-${fid}`);
     const friend = await getUserByID(fid);
@@ -91,7 +97,7 @@ export const createMessageCollection = async (uid: string, fid: string) => {
       ownID: friend?.uid as string,
       sendStatus: 0,
       status: 0,
-      content: null,
+      content: initialValue,
       createdDate: Date.now(),
       emojo: [],
       id: uid,
@@ -134,6 +140,7 @@ export const getAllMessageByUser = async (uid: string): Promise<string[]> => {
   const friendRef = await getDocs(collection(db, MESSAGES_DOC));
   const result: string[] = [];
   let count = 0;
+
   return new Promise((resolve) => {
     friendRef.forEach((doc) => {
       count++;
@@ -142,7 +149,7 @@ export const getAllMessageByUser = async (uid: string): Promise<string[]> => {
           result.push(doc.id);
         }
       }
-      if (count === friendRef.size - 1) {
+      if (count === friendRef.size) {
         resolve(result);
       }
     });
@@ -237,6 +244,4 @@ export const sendMessage = (id: string, content: ChatItem) => {
   updateDoc(ref, {
     messages: arrayUnion(content),
   });
-
-  // i don't kwow any way to access ref {images:[],messages:[]}
 };
