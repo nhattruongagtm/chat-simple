@@ -5,12 +5,14 @@ import {
   requestSendMessageSuccess,
 } from "../../features/chat/chatSlice";
 import useGetUser from "../../hooks/useGetUser";
-import { ChatItem, ChatListItem, ContentFile } from "../../models/chat";
+import { User } from "../../models/auth";
+import { ChatItem, ContentFile } from "../../models/chat";
 import { RootState } from "../../store";
 import { ChatMainContext } from "./ChatFrame";
 
 export interface MessageModel {
   id: string;
+  info: User;
   content: ChatItem;
 }
 
@@ -22,9 +24,11 @@ const InputFrame = () => {
     video: "",
   };
   const [content, setContent] = useState<ContentFile>(initialValue);
-  const hostUser = useGetUser();
+ const myAccount = useSelector((state:RootState)=>state.signUp.myAccount)
   const dispatch = useDispatch();
   const id = useContext(ChatMainContext)?.id;
+
+  
 
   const msg = useSelector((state: RootState) => state.chat.chatDetail);
 
@@ -41,7 +45,6 @@ const InputFrame = () => {
   const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { media, text, video, sticker } = content;
-    console.log(content);
     if (
       (text && text.trim() !== "") ||
       media.length > 0 ||
@@ -52,13 +55,13 @@ const InputFrame = () => {
         content: content,
         createdDate: Date.now(),
         emojo: [],
-        id: hostUser?.uid as string,
-        ownID: hostUser?.uid as string,
+        id:  `${myAccount.uid}-${Date.now()}`,
+        ownID: myAccount.uid as string,
         sendStatus: 0,
         status: 0,
       };
       if (id) {
-        dispatch(requestSendMessage({ id: id, content: chatItem }));
+        dispatch(requestSendMessage({ id: id, info: myAccount,content: chatItem }));
       }
       // message(chatItem)
       setContent(initialValue);
@@ -105,7 +108,7 @@ const InputFrame = () => {
         </div>
       )}
       <div className="avatar input__chat__avatar">
-        <img src={hostUser?.photoUrl} alt="" />
+        <img src={myAccount.photoUrl} alt="" />
       </div>
       <input
         type="text"

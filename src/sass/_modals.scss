@@ -7,25 +7,39 @@ $border: rgb(129, 129, 129);
   transform: translate(-50%, -50%) scale(0);
   z-index: 50;
   width: 500px;
-  height: 400px;
+  min-height: 400px;
   // background-color: white;
   border-radius: 15px;
   padding: 15px;
   color: rgb(196, 196, 196);
   background-color: rgb(15, 15, 15);
   border: 2px solid $border;
-  transition: .2s;
+  transition: 0.2s;
+  max-height: 80%;
   &__header {
     display: flex;
     justify-content: space-between;
     font-size: 20px;
     padding-bottom: 15px;
     border-bottom: 1px solid $border;
+    align-items: center;
     &__close {
       cursor: pointer;
       transition: 0.3s;
       &:hover {
         color: rgb(255, 165, 165);
+      }
+    }
+    .btn__create__group {
+      flex-grow: 1;
+      button {
+        background-color: $blue;
+        color: white;
+        border-radius: 15px;
+        padding: 5px 15px;
+        justify-self: right;
+        float: right;
+        margin-right: 50px;
       }
     }
     span {
@@ -60,6 +74,71 @@ $border: rgb(129, 129, 129);
         }
       }
     }
+    .list__group {
+      width: calc(100% - 20px );
+      background-color: $dark-gray;
+      border-radius: 15px;
+      height: fit-content;
+      margin-top: 10px;
+      padding: 10px;
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+      position: relative;
+      &__item {
+        width: fit-content;
+        height: fit-content;
+        max-width: 120px;
+        padding: 7px;
+        text-overflow: ellipsis;
+        border-radius: inherit;
+        background-color: $dark-gray-light;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        position: relative;
+        &:hover{
+          background-color: $dark;
+        }
+        p{
+          color: white;
+          font-size: 10px!important;
+        }
+        i{
+          position: absolute;
+          top: -5px;
+          right: -2px;
+          color: white;
+          font-size: 18px;
+          &:hover{
+            color: $blue;
+          }
+        }
+        &__avatar {
+          width: 25px;
+          height: 25px;
+          
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+          }
+        }
+      }
+      button{
+        background-color: $blue;
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        color: white;
+        border-radius: 15px;
+        padding: 3px 10px ;
+        &:hover{
+          opacity: 0.8;
+        }
+      }
+    }
     .search__user__list {
       margin-top: 15px;
       overflow-y: scroll;
@@ -75,17 +154,16 @@ $border: rgb(129, 129, 129);
         background-color: $dark-gray;
       }
       &__more {
-          text-align: center;
+        text-align: center;
         button {
           padding: 5px 15px;
           background-color: $text-color;
           color: white;
           border-radius: 15px;
-          transition: .2s;
-          &:hover{
-              background-color: $dark-gray-light;
+          transition: 0.2s;
+          &:hover {
+            background-color: $dark-gray-light;
           }
-          
         }
       }
       &__item {
@@ -94,47 +172,52 @@ $border: rgb(129, 129, 129);
         margin-bottom: 10px;
 
         .search__user {
+          &__info {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+          }
           &__avatar {
             img {
               @include avatar(35px);
             }
           }
 
-          &__btn{
+          &__btn {
             flex-grow: 1;
             text-align: right;
-            &--add{
-                background-color: $blue;
-                &:hover:after {
-                    position: absolute;
-                    content: "+";
-                    width: 100%;
-                    height: 100%;
-                    top: 0;
-                    left: 0;
-                    border-radius: inherit;
-                    font-size: 21px;
-                    @include flex();
-                    font-weight: bold;
-                    background-color: rgb(0, 94, 201);
-                  }
+            &--add {
+              background-color: $blue;
+              &:hover:after {
+                position: absolute;
+                content: "+";
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                border-radius: inherit;
+                font-size: 21px;
+                @include flex();
+                font-weight: bold;
+                background-color: rgb(0, 94, 201);
+              }
             }
-            &--chat{
-                background-color: $text-color;
+            &--chat {
+              background-color: $text-color;
 
-                &:hover:after {
-                    position: absolute;
-                    content: "Go";
-                    width: 100%;
-                    height: 100%;
-                    top: 0;
-                    left: 0;
-                    border-radius: inherit;
-                    font-size: 13px;
-                    @include flex();
-                    font-weight: bold;
-                    background-color: rgb(0, 201, 50);
-                  }
+              &:hover:after {
+                position: absolute;
+                content: "Go";
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                border-radius: inherit;
+                font-size: 13px;
+                @include flex();
+                font-weight: bold;
+                background-color: rgb(0, 201, 50);
+              }
             }
             button {
               position: relative;
@@ -155,9 +238,33 @@ $border: rgb(129, 129, 129);
       }
     }
   }
-  
 }
-.search__user--popup{
+.search__user--popup {
   transform: translate(-50%, -50%) scale(1);
+}
+@media screen and(max-width: 767px) {
+  .search__user {
+    width: 80%;
+  }
+}
+@media screen and(max-width: 480px) {
+  .search__user {
+    height: fit-content;
+    max-height: 600px;
 
+    &__header {
+      font-size: 14px;
+    }
+    &__familiar {
+    }
+    &__info {
+      height: fit-content;
+      flex-direction: column;
+      align-items: unset !important;
+      gap: 5px !important;
+    }
+    .btn__create__group {
+      // margin-right: 20px!important;
+    }
+  }
 }

@@ -11,7 +11,10 @@ import {
   requestLogin,
   requestLoginFail,
   requestLoginSuccess,
+  updateMyId,
+  
 } from "../features/auth/signUpSlice";
+import useGetUser from "../hooks/useGetUser";
 
 const getToken = async (user: User) => {
   const result = await user.getIdToken();
@@ -26,9 +29,8 @@ function* loginWatcher(action: PayloadAction<LoginUser>) {
     if (result) {
       const token: string = yield call(getToken, result);
       if (token) {
-        
         yield put(requestLoginSuccess(token));
-        yield put(push("/me"));
+        yield put(push("/me"))  ;
       } else {
         yield put(requestLoginFail());
       }

@@ -21,14 +21,14 @@ interface AvatarProps {
 export const Avatar = ({ name }: AvatarProps) => {
   return (
     <div className="message__panel__avatar avatar--no">
-      <span>{name.split("")[0].toUpperCase()}</span>
+      <span>{name && name.split("")[0].toUpperCase()}</span>
     </div>
   );
 };
 
 export const MessagePanel = (props: MessagePanelProps) => {
   const dispatch = useDispatch();
-  let user = useGetUser();
+  let user = useSelector((state: RootState) => state.signUp.myAccount);
   const device = useSelector((state: RootState) => state.device);
   const isMobile = device.width <= 480 ? true : false;
 
@@ -39,36 +39,41 @@ export const MessagePanel = (props: MessagePanelProps) => {
   const [waitingList, setWaitingList] = useState<User[]>([]);
 
   const handleAcceptFriend = (uid: string) => {
-    dispatch(requestAddFriend({ uid: user?.uid as string, fid: uid, type: 1 }));
+    dispatch(requestAddFriend({ uid: user.uid, fid: uid, type: 1 }));
   };
 
   useEffect(() => {
     let isCancel = false;
     const getWaitingList = async () => {
-      if (user) {
-        const waitingRef = doc(db, USER_DOC, user.uid);
+      if (user.uid !== "") {
+        try {
+          const waitingRef = doc(db, USER_DOC, user.uid);
 
-        onSnapshot(waitingRef, async (doc) => {
-          if (doc.exists()) {
-            const data = doc.data() as User;
-            const { friends } = data;
+          onSnapshot(waitingRef, async (doc) => {
+            if (doc.exists()) {
+              const data = doc.data() as User;
+              const { friends } = data;
 
-            const waitingList = friends.filter(
-              (item) => !item.accept && item.type === 1
-            );
-            let result: User[] = [];
-            for (let i = 0; i < waitingList.length; i++) {
-              const element = waitingList[i];
-              const friend = await getUserByID(element.id);
+              const waitingList = friends.filter(
+                (item) => !item.accept && item.type === 1
+              );
+              let result: User[] = [];
+              for (let i = 0; i < waitingList.length; i++) {
+                const element = waitingList[i];
+                const friend = await getUserByID(element.id);
 
-              if (friend) {
-                result = [...result, friend];
+                if (friend) {
+                  result = [...result, friend];
+                }
+              }
+              if (!isCancel) {
+                setWaitingList(result);
               }
             }
-
-            setWaitingList(result);
-          }
-        });
+          });
+        } catch (e) {
+          console.log(e);
+        }
       }
     };
     getWaitingList();
@@ -97,10 +102,9 @@ export const MessagePanel = (props: MessagePanelProps) => {
     );
   };
 
-  const handleSearchFriends = (keyword: string) =>{
-    console.log(keyword)
-
-  }
+  const handleSearchFriends = (keyword: string) => {
+    console.log(keyword);
+  };
   return (
     <div
       className={
@@ -112,7 +116,7 @@ export const MessagePanel = (props: MessagePanelProps) => {
     >
       <div className="message__panel__info">
         <div className="message__panel__info__user">
-          {user ? (
+          {user.uid !== "" ? (
             <>
               <div className="message__user__header">
                 <div className="message__panel__avatar">
@@ -127,7 +131,7 @@ export const MessagePanel = (props: MessagePanelProps) => {
                   <div className="message__panel__name__absolute">
                     <div className="message__panel__name__main">
                       <p className="name">
-                        {user?.firstName} {user?.lastName}
+                        {user.firstName} {user.lastName}
                       </p>
                       <p className="message">UI/UX Designer</p>
                     </div>
@@ -144,13 +148,13 @@ export const MessagePanel = (props: MessagePanelProps) => {
 
           <div className="message__user__main">
             <div className="message__user__notify">
-              {user && user.photoUrl !== "" ? (
+              {user.uid !== "" && user.photoUrl !== "" ? (
                 <img
                   src={user.photoUrl}
                   alt=""
                   className="message__user__notify__avatar"
                 />
-              ) : user && user.photoUrl === "" ? (
+              ) : user.uid !== "" && user.photoUrl === "" ? (
                 <Avatar name={user.firstName} />
               ) : (
                 <div className="avatar--skeleton"></div>
@@ -160,7 +164,7 @@ export const MessagePanel = (props: MessagePanelProps) => {
                   Messages
                 </p>
                 <p className="message">
-                  {user ? (
+                  {user.uid !== "" ? (
                     <>
                       <span className="mail"></span> <span>21</span> messages
                     </>
@@ -234,7 +238,7 @@ export const MessagePanel = (props: MessagePanelProps) => {
           </div>
         </div>
       </div>
-      <SearchFrame onGetKeyword={handleSearchFriends}/>
+      <SearchFrame onGetKeyword={handleSearchFriends} />
       <AllMessages />
     </div>
   );

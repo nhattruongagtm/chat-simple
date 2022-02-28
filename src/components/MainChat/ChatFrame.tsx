@@ -7,100 +7,49 @@ import { getAllMessageByUser, getFriendID, MESSAGES_DOC } from "../../api/chat";
 import { getUserByID } from "../../api/firestore";
 import { db } from "../../config/firebase";
 import {
+  requestLoadMessageItemSuccess,
+  requestLoadMessages1,
+  requestLoadMessagesSuccess1,
+  updateChatID,
+} from "../../features/chat/chatSlice";
+import {
   updateLoadingTime,
   updateTab,
 } from "../../features/global/deviceSlice";
 import useGetUser from "../../hooks/useGetUser";
-import { ChatItem, ChatListItem } from "../../models/chat";
+import { ChatItem } from "../../models/chat";
 import { RootState } from "../../store";
 import ChatScreen from "./ChatScreen";
 import Header from "./Header";
 import InputFrame from "./InputFrame";
+import { ChatListData } from "../../models/chat";
 
 interface Props {}
 export interface Params {
   friendID: string;
 }
-export const ChatMainContext = React.createContext<ChatCollection | null>(null);
+export const ChatMainContext = React.createContext<ChatListData | null>(null);
 export interface ChatCollection {
   id: string;
-  content: ChatListItem;
+  content: ChatItem;
 }
 const ChatFrame = (props: Props) => {
   const dispatch = useDispatch();
   const params = useParams() as Params;
-  const uid = useGetUser()?.uid;
-  const chatMain = useSelector(
-    (state: RootState) => state.chat.chatList.messages
-  );
-  const chatDetail = useSelector((state: RootState) => state.chat.chatDetail);
-  const [chatFrame, setChatFrame] = useState<ChatCollection>();
+  const chatMain = useSelector((state: RootState) => state.chat.chatList);
+  const [chatDetail, setChatDetail] = useState<ChatListData>();
+  const user = useSelector((state: RootState) => state.signUp.myAccount);
 
   useEffect(() => {
-    let isCancel = false;
-    const displayAllMessages = async () => {
-      try {
-        const user = chatMain.find((item) => item.friendID === params.friendID);
-        if (uid) {
-          const list = await getAllMessageByUser(uid);
-          let messagesList: ChatListItem = {
-            friendID: "",
-            avatar: "",
-            isActive: false,
-            messages: [],
-            name: "",
-            status: false,
-          };
 
-          if (user) {
-            const friendID = list.find(
-              (item) => item.indexOf(user.friendID) !== -1
-            );
-
-            if (friendID) {
-              const ref = doc(db, MESSAGES_DOC, friendID);
-              onSnapshot(ref, async (doc) => {
-                if (doc.exists()) {
-                  const ids = friendID.split("-");
-                  const messages = doc.data().messages as ChatItem[];
-                  const friend = await getUserByID(getFriendID(uid, ids));
-                  if (friend) {
-                    const chatItem: ChatListItem = {
-                      friendID: friend.uid,
-                      name: `${friend.firstName} ${friend.lastName}`,
-                      avatar: friend.photoUrl,
-                      isActive: false,
-                      messages: messages,
-                      status: true,
-                    };
-                    messagesList = chatItem;
-
-                    const collection: ChatCollection = {
-                      id: friendID,
-                      content: chatItem,
-                    };
-
-                    setChatFrame(collection);
-                  }
-                }
-              });
-            }
-          }
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    if (!isCancel) {
-      displayAllMessages();
+    const chatItem = chatMain && chatMain.filter(item=>item.id === params.friendID)[0];
+    if(chatItem){
+      setChatDetail(chatItem)
     }
-    return () => {
-      isCancel = true;
-    };
-  }, [params]);
+  }, [chatMain,params]);
 
   return (
-    <ChatMainContext.Provider value={chatFrame as ChatCollection}>
+    <ChatMainContext.Provider value={chatDetail as ChatListData}>
       <Header />
       <ChatScreen />
       <InputFrame />

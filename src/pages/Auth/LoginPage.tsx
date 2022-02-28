@@ -1,8 +1,9 @@
 import { FacebookAuthProvider, GoogleAuthProvider } from "firebase/auth";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router";
+import { Redirect, useHistory } from "react-router";
 import { facebookProvider, googleProvider } from "../../config/authMethods";
+import { ACCESS__TOKEN } from "../../constants/routes";
 import { requestLogin } from "../../features/auth/signUpSlice";
 import socialAuth from "../../service/auth";
 import { RootState } from "../../store";
@@ -18,14 +19,14 @@ const LoginPage = (props: LoginPageProps) => {
     password: "",
   });
 
-  const loading = useSelector((state: RootState)=>state.signUp.isLoading)
+  const loading = useSelector((state: RootState) => state.signUp.isLoading);
 
   const [isTooglePassword, setIsTooglePassword] = useState<boolean>(false);
   const history = useHistory();
   const dispatch = useDispatch();
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(requestLogin(input));  
+    dispatch(requestLogin(input));
   };
   const handleLoginApi = async (
     provider: FacebookAuthProvider | GoogleAuthProvider
@@ -41,6 +42,11 @@ const LoginPage = (props: LoginPageProps) => {
       [name]: value,
     });
   };
+
+  if (localStorage.getItem(ACCESS__TOKEN)) {
+    return <Redirect to={"/me"} />;
+  }
+
   return (
     <div className="signup">
       <div className="signup__container">
@@ -101,7 +107,7 @@ const LoginPage = (props: LoginPageProps) => {
               Forgot Password
             </button>
             <button type="submit" className="signup__submit">
-              {loading ? 'Processing...' : 'Login'}
+              {loading ? "Processing..." : "Login"}
             </button>
           </div>
         </form>

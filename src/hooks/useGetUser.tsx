@@ -11,6 +11,7 @@ const useGetUser = () => {
       if (token) {
         const u = await getUserByID(token.user_id);
         if (u) {
+          
           setUser(u);
         }
       }

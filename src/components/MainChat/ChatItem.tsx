@@ -1,18 +1,26 @@
-import React, { useContext } from "react";
+import React from "react";
+import { useSelector } from "react-redux";
+import { recallMessage } from "../../api/chat";
+import useGetUser from "../../hooks/useGetUser";
 import { ChatItem as Chat, ContentFile } from "../../models/chat";
+import { RootState } from "../../store";
 import { getTime } from "../Messages/MessaggeItem";
-import { ChatMainContext } from "./ChatFrame";
-
+import { User } from "../../models/auth";
+import { info } from "console";
+import { Avatar } from "../Messages/MessagePanel";
 interface ChatItemProps {
   own: boolean;
   msg: Chat;
   space: number;
+  info: User;
 }
 interface SpaceTimeProps {
   time: number;
 }
+interface RecallComponentProps {
+  type: number;
+}
 const SpaceTime = ({ time }: SpaceTimeProps) => {
-
   const getTime = (number: number) => {
     let result = "";
     const now = Date.now();
@@ -22,12 +30,10 @@ const SpaceTime = ({ time }: SpaceTimeProps) => {
     } else if (second <= 60 * 60 * 24) {
       result = new Date(number).toLocaleTimeString().slice(0, 5);
     } else {
-      const dateTime = new Date(number).toLocaleDateString().split("/");
-      result = `${Number(dateTime[0]) > 10 ? dateTime[0] : `0${dateTime[0]}`}/${
-        Number(dateTime[1]) > 10 ? dateTime[0] : `0${dateTime[1]}`
-      }`;
-
-      result = `${new Date(number).getDay() + 1} ${result}`;
+      const dateTime = new Date(number).toLocaleTimeString().split("/");
+      const d = dateTime.toString().split(":");
+      result = `${d[0]}:${d[1]}`;
+      result = `T${new Date(number).getDay() + 1} ${result}`;
     }
     return result;
   };
@@ -38,59 +44,129 @@ const SpaceTime = ({ time }: SpaceTimeProps) => {
   );
 };
 
-const ChatItem = ({ own, msg,space}: ChatItemProps) => {
+const ChatItem = ({ own, msg, space, info }: ChatItemProps) => {
   const content = msg.content as ContentFile;
-  const spaceTime = Math.floor((msg.createdDate - space) / 1000)
-  // console.log(spaceTime)
+  const spaceTime = Math.floor((msg.createdDate - space) / 1000);
+  const chatID = useSelector((state: RootState) => state.chat.chatID);
+  const uid = useGetUser()?.uid;
+  const handleDisplayOptions = (e: React.TouchEvent<HTMLDivElement>) => {
+    console.log("press");
+  };
+
+  // Detete: status code = 1, Recall: status code = 2
+
+  const handleDeleteMessage = () => {
+    recallMessage(chatID, msg, 1);
+  };
+  const handleRecallMessage = () => {
+    recallMessage(chatID, msg, 2);
+  };
+  const RecallComponent = ({ type }: RecallComponentProps) => {
+    return (
+      <div
+        className={
+          type === 1
+            ? "message__item recall__client message--client"
+            : "message__item recall__client"
+        }
+      >
+        <div className="avatar message__item__avatar">
+          <i className="fa-regular fa-circle-check"></i>
+        </div>
+        <div className="message__recall">Tin nhắn đã được thu hồi</div>
+      </div>
+    );
+  };
   return (
     <>
-      {(spaceTime < 2*60 && spaceTime > 60) ? <div className="empty__space"></div> : (spaceTime > 1000) && <SpaceTime time={msg.createdDate} />}
-      {(content.media.length > 0 || content.text !== "") && (
+      {(msg.status === 0 || msg.status === 2) && (
         <>
-          {msg.content && (
-            <div
-              className={
-                own === false
-                  ? "message__item"
-                  : "message__item message__item--client"
-              }
-            >
-              <div className="avatar message__item__avatar">
-                <i className="fa-regular fa-circle-check"></i>
-                {/* <img src={user?.avatar} alt=""/> */}
-                {/* <i className="fa-solid fa-circle-check"></i> */}
-              </div>
-              <div className="message__item__content">
-                {content.media.length > 0 && (
-                  <div className="message__item__attach">
-                    {content.media.map((item, index) => (
-                      <img
-                        src="https://www.timeoutdubai.com/cloud/timeoutdubai/2021/09/11/hfpqyV7B-IMG-Dubai-UAE.jpg"
-                        alt={item}
-                        key={index}
-                      />
-                    ))}
-                  </div>
-                )}
-                {msg.content.text !== "" && (
-                  <p className={own === true ? "" : "message--client"}>
-                    {msg.content.text}
-                  </p>
-                )}
+          {spaceTime < 2 * 60 && spaceTime > 60 ? (
+            <div className="empty__space"></div>
+          ) : (
+            spaceTime > 7000 && <SpaceTime time={msg.createdDate} />
+          )}
+          {(content.media.length > 0 || content.text !== "") && (
+            <>
+              {msg.status !== 2 ? (
+                <>
+                  {msg.content && (
+                    <div
+                      className={
+                        own === false
+                          ? "message__item"
+                          : "message__item message__item--client"
+                      }
+                      // onTouchStart={handleDisplayOptions}
+                    >
+                      <div className="avatar message__item__avatar">
+                        {msg.ownID === uid ? (
+                          <>
+                            {msg.sendStatus === 0 ? (
+                              <i className="fa-regular fa-circle-check"></i>
+                            ) : (
+                              <i className="fa-solid fa-circle-check"></i>
+                            )}
+                          </>
+                        ) : info.photoUrl !== "" ? (
+                          <img src={info.photoUrl} alt="" />
+                        ) : (
+                          // <Avatar name={info.firstName} />
+                          <img
+                            src="https://dvdn247.net/wp-content/uploads/2020/07/avatar-mac-dinh-2.jpg"
+                            alt=""
+                          />
+                        )}
+                      </div>
+                      <div className="message__item__content">
+                        {content.media.length > 0 && (
+                          <div className="" id="media__attach">
+                            {content.media.map((item, index) => (
+                              <img
+                                src="https://www.timeoutdubai.com/cloud/timeoutdubai/2021/09/11/hfpqyV7B-IMG-Dubai-UAE.jpg"
+                                alt={item}
+                                key={index}
+                              />
+                            ))}
+                          </div>
+                        )}
+                        {msg.content.text !== "" && (
+                          <p className={own === true ? "" : "message--client"}>
+                            {msg.content.text}
+                          </p>
+                        )}
 
-                <div className="message__item__features"></div>
-              </div>
-              <div className="message__item__more">
-                <div className="message__item__more__icons">
-                  <i className="far fa-grin-beam"></i>
-                  <i className="fas fa-reply"></i>
-                  <i className="fas fa-ellipsis-v"></i>
-                </div>
-                <div className="message__item__more__time">
-                  {getTime(msg.createdDate)}
-                </div>
-              </div>
-            </div>
+                        {/* <div className="message__item__features"></div> */}
+                      </div>
+                      <div className="message__item__more">
+                        <div className="message__item__more__icons">
+                          <i className="far fa-grin-beam"></i>
+                          <i className="fas fa-reply"></i>
+                          {uid && uid === msg.ownID && (
+                            <div className="delete__recall">
+                              <i className="fas fa-ellipsis-v"></i>
+                              <div className="message__item__delete">
+                                <span onClick={handleDeleteMessage}>
+                                  Delete
+                                </span>
+                                <span onClick={handleRecallMessage}>
+                                  Recall
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        <div className="message__item__more__time">
+                          {getTime(msg.createdDate)}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <RecallComponent type={msg.ownID === uid ? 1 : 0} />
+              )}
+            </>
           )}
         </>
       )}
