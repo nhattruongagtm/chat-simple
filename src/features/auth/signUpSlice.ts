@@ -71,6 +71,10 @@ export const signUpSlice = createSlice({
       state.myAccount = user;
       state.myAccount.password = "****************";
     },
+    requestLogout: (state) => {
+      localStorage.removeItem(ACCESS__TOKEN);
+      state = initialState;
+    },
   },
 });
 
@@ -82,6 +86,7 @@ export const {
   requestLoginFail,
   requestLoginSuccess,
   updateMyId,
+  requestLogout,
 } = signUpSlice.actions;
 
 export default signUpSlice.reducer;

@@ -85,6 +85,7 @@ const ChatMainReducer = createSlice({
           data: content,
         });
       }
+
     },
     requestSendMessageSuccess: (state, action: PayloadAction<MessageModel>) => {
       const { id, content, info } = action.payload;

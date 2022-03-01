@@ -13,6 +13,7 @@ export interface Modal {
     users: MemberInfo[];
   };
   isDisplayLayer: boolean;
+  isGiphyPopup: boolean;
 }
 const initialState: Modal = {
   searchUser: false,
@@ -21,6 +22,7 @@ const initialState: Modal = {
     users: [],
   },
   isDisplayLayer: false,
+  isGiphyPopup: false,
 };
 
 export const modalSlice = createSlice({
@@ -51,6 +53,11 @@ export const modalSlice = createSlice({
         (item) => item.id !== action.payload
       );
     },
+    displayGiphyPopup: (state)=>{
+      state.isGiphyPopup = !state.isGiphyPopup;
+      state.isDisplayLayer = !state.isDisplayLayer;
+
+    }
   },
 });
 
@@ -60,6 +67,7 @@ export const {
   isAddGroup,
   addMemberIntoGroup,
   removeMemberInGroup,
+  displayGiphyPopup,
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

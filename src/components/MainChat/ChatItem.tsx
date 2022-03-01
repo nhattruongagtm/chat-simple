@@ -52,7 +52,7 @@ const ChatItem = ({ own, msg, space, info }: ChatItemProps) => {
   const handleDisplayOptions = (e: React.TouchEvent<HTMLDivElement>) => {
     console.log("press");
   };
-
+  
   // Detete: status code = 1, Recall: status code = 2
 
   const handleDeleteMessage = () => {
@@ -122,14 +122,12 @@ const ChatItem = ({ own, msg, space, info }: ChatItemProps) => {
                         {content.media.length > 0 && (
                           <div className="" id="media__attach">
                             {content.media.map((item, index) => (
-                              <img
-                                src="https://www.timeoutdubai.com/cloud/timeoutdubai/2021/09/11/hfpqyV7B-IMG-Dubai-UAE.jpg"
-                                alt={item}
-                                key={index}
-                              />
+                              <img src={item} alt={item} key={index} />
                             ))}
+                            
                           </div>
                         )}
+
                         {msg.content.text !== "" && (
                           <p className={own === true ? "" : "message--client"}>
                             {msg.content.text}

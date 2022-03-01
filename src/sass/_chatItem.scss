@@ -5,6 +5,7 @@
   margin-bottom: 7px;
   cursor: pointer;
   height: fit-content;
+  transition: 0.2s;
 
   &__attach,
   #media__attach {
@@ -12,7 +13,7 @@
     overflow: hidden;
     width: 200px;
     max-width: 200px;
-    background-color: $blue;
+    // background-color: $blue;
     margin-bottom: 5px;
     display: grid;
     grid-template-columns: repeat(1, 1fr);

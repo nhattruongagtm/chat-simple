@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router";
+import GiphyPopUp from "../../components/Modals/GiphyPopUp";
 import SearchUser from "../../components/Modals/SearchUser";
 import { ACCESS__TOKEN } from "../../constants/routes";
 import { requestLoadMessages1 } from "../../features/chat/chatSlice";
@@ -27,6 +28,12 @@ const MainScreen = (props: Props) => {
   //   };
   // }, [user]);
 
+  if(!localStorage.getItem(ACCESS__TOKEN)){
+    return (
+      <Redirect to="/"/>
+    )
+  }
+
   return (
     <div className="main__screen">
       <MainPage />
@@ -34,6 +41,7 @@ const MainScreen = (props: Props) => {
         className={isDisplayLayer ? "layer-app layer-display" : "layer-app"}
       ></div>
       <SearchUser />
+      <GiphyPopUp/>
     </div>
   );
 };

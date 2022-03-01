@@ -1,5 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { uploadMedia } from "../../api/storage";
+import { displayGiphyPopup } from "../../features/auth/modalSlice";
 import {
   requestSendMessage,
   requestSendMessageSuccess,
@@ -14,6 +16,12 @@ export interface MessageModel {
   id: string;
   info: User;
   content: ChatItem;
+  blobs?: BlobType[];
+}
+
+export interface BlobType{
+  type: 0 | 1,
+  file: File,
 }
 
 const InputFrame = () => {
@@ -21,16 +29,16 @@ const InputFrame = () => {
     media: [],
     sticker: "",
     text: "",
-    video: "",
+    video: [],
   };
   const [content, setContent] = useState<ContentFile>(initialValue);
- const myAccount = useSelector((state:RootState)=>state.signUp.myAccount)
+  const myAccount = useSelector((state: RootState) => state.signUp.myAccount);
   const dispatch = useDispatch();
   const id = useContext(ChatMainContext)?.id;
 
-  
-
   const msg = useSelector((state: RootState) => state.chat.chatDetail);
+
+  const blobsRef = useRef<BlobType[]>([]);
 
   useEffect(() => {
     return () => {
@@ -48,36 +56,62 @@ const InputFrame = () => {
     if (
       (text && text.trim() !== "") ||
       media.length > 0 ||
-      video !== "" ||
+      video.length > 0 ||
       sticker !== ""
     ) {
       const chatItem: ChatItem = {
         content: content,
         createdDate: Date.now(),
         emojo: [],
-        id:  `${myAccount.uid}-${Date.now()}`,
+        id: `${myAccount.uid}-${Date.now()}`,
         ownID: myAccount.uid as string,
         sendStatus: 0,
         status: 0,
       };
       if (id) {
-        dispatch(requestSendMessage({ id: id, info: myAccount,content: chatItem }));
+        console.log(content);
+        dispatch(
+          requestSendMessage({
+            id: id,
+            info: myAccount,
+            content: chatItem,
+            blobs: blobsRef.current,
+          })
+        );
+        // message(chatItem)
+        setContent(initialValue);
       }
-      // message(chatItem)
-      setContent(initialValue);
     }
   };
 
   const handleChangeFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
 
-    if (files) {
+    if (files && id) {
       let blobs = [];
+      let blobsVideo = [];
       for (let i = 0; i < files.length; i++) {
-        const url = URL.createObjectURL(files[i]);
-        blobs.push(url);
+        const item = files[i];
+        const url = URL.createObjectURL(item);
+        if (item.type === "video/mp4") {
+          blobsVideo.push(url);
+          blobsRef.current.push({
+            type: 1,
+            file: item,
+          });
+        } else {
+          blobsRef.current.push({
+            type: 0,
+            file: item,
+          });
+          blobs.push(url);
+        }
       }
-      setContent({ ...content, media: [...content.media, ...blobs] });
+      setContent({
+        ...content,
+        media: [...content.media, ...blobs],
+        video: [...content.video, ...blobsVideo],
+      });
     }
   };
   const handleDeleteAttachItem = (index: number) => {
@@ -86,10 +120,16 @@ const InputFrame = () => {
       media: content.media.filter((item, i) => i !== index),
     });
   };
+  const handleDeleteAttachVideoItem = (index: number) => {
+    setContent({
+      ...content,
+      video: content.video.filter((item, i) => i !== index),
+    });
+  };
 
   return (
     <form className="input__chat" onSubmit={handleSendMessage}>
-      {content.media.length > 0 && (
+      {(content.media.length > 0 || content.video.length > 0) && (
         <div className="attach__panel">
           <div className="attach__panel__main">
             {content.media.map((item, index) => (
@@ -102,6 +142,18 @@ const InputFrame = () => {
                   <i className="fa-regular fa-circle-xmark"></i>{" "}
                 </div>
                 <img src={item} alt="" />
+              </div>
+            ))}
+            {content.video.map((item, index) => (
+              <div className="attach__panel__item" key={index}>
+                <div className="attach__item--layer"></div>
+                <div
+                  className="attach__item__close"
+                  onClick={() => handleDeleteAttachVideoItem(index)}
+                >
+                  <i className="fa-regular fa-circle-xmark"></i>{" "}
+                </div>
+                <video src={item} />
               </div>
             ))}
           </div>
@@ -117,7 +169,10 @@ const InputFrame = () => {
         onChange={(e) => setContent({ ...content, text: e.target.value })}
       />
       <div className="input__attach">
-        <i className="fas fa-microphone"></i>
+        <i
+          className="bx bx-smile"
+          onClick={() => dispatch(displayGiphyPopup())}
+        ></i>
         <label htmlFor="attach" className="attach">
           <i className="fas fa-paperclip"></i>
         </label>

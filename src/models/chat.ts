@@ -17,7 +17,7 @@ interface CallFile {
 export interface ContentFile {
   text: string;
   media: string[];
-  video: string;
+  video: string[];
   sticker: string;
 }
 export interface ChatItem {

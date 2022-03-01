@@ -103,7 +103,7 @@ export const createMessageCollection = async (uid: string, fid: string) => {
     media: [],
     text: "",
     sticker: "",
-    video: "",
+    video: [],
   };
   try {
     const messageRef = collection(db, MESSAGES_DOC);
@@ -144,7 +144,7 @@ export const createMessageCollecction1 = async (uid: string, ids: Member[]) => {
     media: [],
     text: "",
     sticker: "",
-    video: "",
+    video: [],
   };
   try {
     const messageRef = collection(db, MESSAGES_DOC);
@@ -162,6 +162,7 @@ export const createMessageCollecction1 = async (uid: string, ids: Member[]) => {
       images: [],
       members: [...ids],
       type: 1,
+      name: "",
     });
   } catch (error) {
     console.log(error);

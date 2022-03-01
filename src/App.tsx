@@ -1,29 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { Redirect, Route, Switch, useLocation, useParams } from "react-router";
+import { doc, onSnapshot } from "firebase/firestore";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { Route, Switch, useLocation } from "react-router";
+import { getFriends, MESSAGES_DOC } from "./api/chat";
+import { getUserByID } from "./api/firestore";
 import "./App.scss";
-import { ACCESS__TOKEN } from "./constants/routes";
+import { db } from "./config/firebase";
+import { updateMyId } from "./features/auth/signUpSlice";
+import { requestLoadMessageItemSuccess } from "./features/chat/chatSlice";
+import { updateWidth } from "./features/global/deviceSlice";
+import useGetUser from "./hooks/useGetUser";
+import { User } from "./models/auth";
+import { ChatData, ChatList, ChatListData } from "./models/chat";
 import LoginPage from "./pages/Auth/LoginPage";
 import { SignUpPage } from "./pages/Auth/SignUpPage";
 import MainScreen from "./pages/Home/MainScreen";
-import jwtDecode from "jwt-decode";
-import { getIDUser } from "./utils/auth";
-import { useDispatch, useSelector } from "react-redux";
-import { updateWidth } from "./features/global/deviceSlice";
-import useGetUser from "./hooks/useGetUser";
-import { updateMyId } from "./features/auth/signUpSlice";
-import { ChatData, ChatList, ChatListData } from "./models/chat";
-import {
-  requestLoadMessageItemSuccess,
-  updateChatID,
-} from "./features/chat/chatSlice";
-import { doc, onSnapshot } from "firebase/firestore";
-import { db } from "./config/firebase";
-import { getAllMessageByUser, getFriends, MESSAGES_DOC } from "./api/chat";
-import { Params } from "./components/MainChat/ChatFrame";
-import { RootState } from "./store";
-import { getUserByID } from "./api/firestore";
-import { User } from "./models/auth";
-import MainPage from "./pages/Home/MainPage";
+
 export const DeviceWithContext = React.createContext<number>(0);
 function App() {
   const dispatch = useDispatch();
@@ -78,12 +70,13 @@ function App() {
                 }
               } else {
                 // to do
-                    
-              members.filter(item=>item.id !== user.uid).forEach(async item=>{
-                const friend = await getUserByID(item.id);
-                friend && partner.push(friend);
 
-              })
+                members
+                  .filter((item) => item.id !== user.uid)
+                  .forEach(async (item) => {
+                    const friend = await getUserByID(item.id);
+                    friend && partner.push(friend);
+                  });
               }
 
               const rs: ChatData[] = [];
@@ -107,10 +100,7 @@ function App() {
                   friend.password = "***************";
                   friends.push(friend);
                 }
-
               }
-
-              console.log(partner)
 
               const newData: ChatListData = {
                 avatar:
@@ -131,7 +121,6 @@ function App() {
                 messages: rs,
               };
 
-          
               dispatch(requestLoadMessageItemSuccess(newData));
             }
           });
@@ -147,8 +136,6 @@ function App() {
       isCancel = true;
     };
   }, [path, user]);
-
-
 
   return (
     <div className="screen">

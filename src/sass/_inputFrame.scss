@@ -137,12 +137,13 @@
   }
   input {
     // font-size: 14px;
+    max-width: 150px;
   }
   .input__attach {
     gap: 0px;
 
     & > i:first-child {
-      display: none;
+      // display: none;
     }
   }
 }

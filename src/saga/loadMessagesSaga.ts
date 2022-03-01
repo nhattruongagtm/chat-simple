@@ -8,7 +8,6 @@ function* loadMessageWatcher(action: PayloadAction<string>){
     try{
         const uid = action.payload;
 
-        
         const result: ChatListData[] = yield call(getRoomList,uid);
         
         yield put(requestLoadMessagesSuccess1(result))

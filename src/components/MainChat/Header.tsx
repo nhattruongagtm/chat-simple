@@ -27,7 +27,8 @@ const Header = (props: HeaderProps) => {
       <div className="header__options">
         <i className="fas fa-video"></i>
         <i className="fas fa-phone-alt"></i>
-        <i className="fas fa-file-image header__options__file"></i>
+        {/* <i className="fas fa-file-image header__options__file"></i> */}
+        <i className="fas fa-microphone"></i>
         <i className="fas fa-file-alt header__options__file"></i>
       </div>
       <div className="header__avatar">
