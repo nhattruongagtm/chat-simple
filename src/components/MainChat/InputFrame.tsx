@@ -290,7 +290,7 @@ const InputFrame = () => {
         isTyping !== myAccount.photoUrl &&
         isTyping !== myAccount.firstName && (
           <div className="typing">
-            <audio src="../audio/typing.mp3" autoPlay />
+            {/* <audio src="../audio/typing.mp3" autoPlay /> */}
             <div className="avatar typing__avatar">
               {isTyping.indexOf("http") !== -1 ? (
                 <img src={isTyping} alt="" />
