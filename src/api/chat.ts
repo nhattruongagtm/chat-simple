@@ -14,6 +14,7 @@ import {
 } from "firebase/firestore";
 import { type } from "os";
 import firebase, { db } from "../config/firebase";
+import { TypingItem } from "../features/chat/chatSlice";
 import { Friend, User } from "../models/auth";
 import {
   ChatData,
@@ -27,6 +28,7 @@ import { getUserByID } from "./firestore";
 
 export const USER_DOC = "users";
 export const MESSAGES_DOC = "messages";
+export const TYPINGS_DOC = "typings";
 export const addFriend = async (uid: string, fid: string, type: number = 0) => {
   const userRef = doc(db, USER_DOC, uid);
   const friendRef = doc(db, USER_DOC, fid);
@@ -65,6 +67,7 @@ export const addFriend = async (uid: string, fid: string, type: number = 0) => {
     });
 
     createMessageCollection(uid, fid);
+    
   }
 };
 export const getWaitingList = async (
@@ -97,6 +100,13 @@ export const getWaitingList = async (
   });
 };
 
+export const createTyping = (id: string) =>{
+  const typingRef = doc(db,TYPINGS_DOC,id);
+
+  setDoc(typingRef,{
+    typing: []
+  })
+}
 // add type attribute
 export const createMessageCollection = async (uid: string, fid: string) => {
   const initialValue: ContentFile = {
@@ -117,7 +127,8 @@ export const createMessageCollection = async (uid: string, fid: string) => {
       emojo: [],
       id: uid,
     };
-    await addDoc(messageRef, {
+    const result = await addDoc(messageRef, 
+      {
       messages: [messageItem],
       images: [],
       members: [
@@ -134,7 +145,15 @@ export const createMessageCollection = async (uid: string, fid: string) => {
         },
       ],
       type: 0,
-    });
+    }
+    );
+    if(result.id){
+      try {
+        createTyping(result.id);
+      } catch (error) {
+        console.log(error)
+      }
+    }
   } catch (error) {
     console.log(error);
   }
@@ -427,4 +446,30 @@ export const getRoomList = async (uid: string): Promise<ChatListData[]> => {
       reject(e);
     }
   });
+};
+
+export const insertTyping = (data: TypingItem) => {
+  const { id, avatar } = data;
+
+  try {
+    const typingRef = doc(db, TYPINGS_DOC, id);
+
+    updateDoc(typingRef, {
+      typing: arrayUnion(avatar)
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const removeTyping = (data: TypingItem) => {
+  const { id, avatar } = data;
+  try {
+    const typingRef = doc(db, TYPINGS_DOC, id);
+
+    updateDoc(typingRef, {
+      typing: arrayRemove(avatar),
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };

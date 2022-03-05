@@ -1,0 +1,1 @@
+export const MESSAGE__THEME = 'MESSAGE_THEME';

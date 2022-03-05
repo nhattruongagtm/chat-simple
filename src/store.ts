@@ -7,6 +7,7 @@ import createSagaMiddleware  from 'redux-saga';
 import { connectRouter, routerMiddleware } from "connected-react-router";
 import {history} from './utils'
 import ChatMainReducer from "./features/chat/chatSlice";
+import storageReducer from "./features/chat/storageSlice";
 import deviceReducer from "./features/global/deviceSlice";
 const sagaMiddleware = createSagaMiddleware();
 const middleware = [...getDefaultMiddleware({thunk: false}),sagaMiddleware,routerMiddleware(history)];
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
     friends: friendReducer,
     chat: ChatMainReducer,
     device: deviceReducer,
+    storage: storageReducer,
 })
 export const store = configureStore({
     reducer: rootReducer,

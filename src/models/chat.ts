@@ -1,3 +1,4 @@
+import { TypingItem } from "../features/chat/chatSlice";
 import { Friend, User } from "./auth";
 
 export interface Emoji {
@@ -38,22 +39,22 @@ export interface ChatList {
   type: number;
   isActive: boolean;
   status: boolean;
-  name? : string;
+  name?: string;
 }
 
 export interface ChatData {
   friend: User;
   data: ChatItem;
 }
-export interface Member{
-  id: string,
-  nickName: string,
-  status: boolean,
-  isAdmin?: boolean,
+export interface Member {
+  id: string;
+  nickName: string;
+  status: boolean;
+  isAdmin?: boolean;
 }
 export interface ChatListData {
-  avatar: string[],
-  name: string,
+  avatar: string[];
+  name: string;
   id: string;
   images: string[];
   members: Member[];
@@ -63,4 +64,8 @@ export interface ChatListData {
   friends: User[];
   messages: ChatData[];
   admin?: string;
+}
+
+export interface TypingMessage {
+  typing: string[];
 }

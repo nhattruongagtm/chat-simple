@@ -73,7 +73,7 @@ export const signUpSlice = createSlice({
     },
     requestLogout: (state) => {
       localStorage.removeItem(ACCESS__TOKEN);
-      state = initialState;
+      state = initialState; 
     },
   },
 });

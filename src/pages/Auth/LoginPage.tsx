@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useHistory } from "react-router";
 import { facebookProvider, googleProvider } from "../../config/authMethods";
-import { ACCESS__TOKEN } from "../../constants/routes";
+import { ACCESS__TOKEN, ME_PATH, SIGN_UP_PATH } from "../../constants/routes";
 import { requestLogin } from "../../features/auth/signUpSlice";
 import socialAuth from "../../service/auth";
 import { RootState } from "../../store";
@@ -20,20 +20,22 @@ const LoginPage = (props: LoginPageProps) => {
   });
 
   const loading = useSelector((state: RootState) => state.signUp.isLoading);
-
   const [isTooglePassword, setIsTooglePassword] = useState<boolean>(false);
   const history = useHistory();
   const dispatch = useDispatch();
+
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(requestLogin(input));
   };
+
   const handleLoginApi = async (
     provider: FacebookAuthProvider | GoogleAuthProvider
   ) => {
     const result = await socialAuth(provider);
     console.log(result);
   };
+  
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -44,7 +46,7 @@ const LoginPage = (props: LoginPageProps) => {
   };
 
   if (localStorage.getItem(ACCESS__TOKEN)) {
-    return <Redirect to={"/me"} />;
+    return <Redirect to={ME_PATH} />;
   }
 
   return (
@@ -62,7 +64,7 @@ const LoginPage = (props: LoginPageProps) => {
             </p>
             <p>
               Don't have an account?{" "}
-              <span onClick={() => history.push("/signup")}>Sign up</span>
+              <span onClick={() => history.push(SIGN_UP_PATH)}>Sign up</span>
             </p>
           </div>
         </div>

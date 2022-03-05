@@ -8,6 +8,8 @@ import { getTime } from "../Messages/MessaggeItem";
 import { User } from "../../models/auth";
 import { info } from "console";
 import { Avatar } from "../Messages/MessagePanel";
+import { useLocation } from "react-router";
+import { ThemeMessage } from "../Detail/Detail";
 interface ChatItemProps {
   own: boolean;
   msg: Chat;
@@ -49,10 +51,19 @@ const ChatItem = ({ own, msg, space, info }: ChatItemProps) => {
   const spaceTime = Math.floor((msg.createdDate - space) / 1000);
   const chatID = useSelector((state: RootState) => state.chat.chatID);
   const uid = useGetUser()?.uid;
+  const location = useLocation().pathname.split("/");
+  const path = location[location.length - 1];
   const handleDisplayOptions = (e: React.TouchEvent<HTMLDivElement>) => {
     console.log("press");
   };
-  
+
+  const storage:ThemeMessage[] = useSelector((state: RootState)=>state.storage.theme);
+  const theme = storage.find(item => item.id === path);
+  const color = theme ? theme.color : "";
+
+  console.log("color",color)
+
+
   // Detete: status code = 1, Recall: status code = 2
 
   const handleDeleteMessage = () => {
@@ -86,7 +97,9 @@ const ChatItem = ({ own, msg, space, info }: ChatItemProps) => {
           ) : (
             spaceTime > 7000 && <SpaceTime time={msg.createdDate} />
           )}
-          {(content.media.length > 0 || content.text !== "") && (
+          {(content.media.length > 0 ||
+            content.video.length > 0 ||
+            content.text !== "") && (
             <>
               {msg.status !== 2 ? (
                 <>
@@ -97,6 +110,7 @@ const ChatItem = ({ own, msg, space, info }: ChatItemProps) => {
                           ? "message__item"
                           : "message__item message__item--client"
                       }
+
                       // onTouchStart={handleDisplayOptions}
                     >
                       <div className="avatar message__item__avatar">
@@ -119,19 +133,34 @@ const ChatItem = ({ own, msg, space, info }: ChatItemProps) => {
                         )}
                       </div>
                       <div className="message__item__content">
-                        {content.media.length > 0 && (
+                        {(content.media.length > 0 ||
+                          content.video.length > 0) && (
                           <div className="" id="media__attach">
                             {content.media.map((item, index) => (
                               <img src={item} alt={item} key={index} />
                             ))}
-                            
+
+                            {content.video.map((item, index) => (
+                              <video key={index} controls>
+                                <source src={item} type="video/mp4"></source>
+                              </video>
+                            ))}
                           </div>
                         )}
 
                         {msg.content.text !== "" && (
-                          <p className={own === true ? "" : "message--client"}>
-                            {msg.content.text}
-                          </p>
+                          <>
+                            {own === false ? (
+                              <p>{msg.content.text}</p>
+                            ) : (
+                              <p
+                                className="message--client"
+                                style={{ backgroundColor: color}}
+                              >
+                                {msg.content.text}
+                              </p>
+                            )}
+                          </>
                         )}
 
                         {/* <div className="message__item__features"></div> */}

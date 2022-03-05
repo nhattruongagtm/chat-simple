@@ -5,9 +5,13 @@ import { Route, Switch, useLocation } from "react-router";
 import { getFriends, MESSAGES_DOC } from "./api/chat";
 import { getUserByID } from "./api/firestore";
 import "./App.scss";
+import { ThemeMessage } from "./components/Detail/Detail";
 import { db } from "./config/firebase";
+import { ME_PATH, SIGN_UP_PATH } from "./constants/routes";
+import { MESSAGE__THEME } from "./constants/storage";
 import { updateMyId } from "./features/auth/signUpSlice";
 import { requestLoadMessageItemSuccess } from "./features/chat/chatSlice";
+import { changeColor } from "./features/chat/storageSlice";
 import { updateWidth } from "./features/global/deviceSlice";
 import useGetUser from "./hooks/useGetUser";
 import { User } from "./models/auth";
@@ -44,7 +48,6 @@ function App() {
         if (user && path) {
           const ref = doc(db, MESSAGES_DOC, path);
           const partner: User[] = [];
-          // dispatch(updateChatID(params.friendID));
           onSnapshot(ref, async (doc) => {
             if (doc.exists()) {
               const data = doc.data() as ChatList;
@@ -137,6 +140,17 @@ function App() {
     };
   }, [path, user]);
 
+  useEffect(()=>{
+    const storage = localStorage.getItem(MESSAGE__THEME);
+    if(!storage){
+      localStorage.setItem(MESSAGE__THEME,JSON.stringify([]))
+    }
+    else{
+      const store = JSON.parse(storage) as ThemeMessage[];
+      dispatch(changeColor(store))
+    }
+  },[])
+
   return (
     <div className="screen">
       <div className="wrapper" id="wrapper">
@@ -144,10 +158,10 @@ function App() {
           <Route exact path="/">
             <LoginPage />
           </Route>
-          <Route path="/signup">
+          <Route path={SIGN_UP_PATH}>
             <SignUpPage />
           </Route>
-          <Route path="/me">
+          <Route path={ME_PATH}>
             <MainScreen />
           </Route>
         </Switch>

@@ -1,8 +1,12 @@
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import { useParams } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useParams } from "react-router";
+import { MESSAGES_DOC } from "../../api/chat";
+import { db } from "../../config/firebase";
+import { TypingItem, typingMessage } from "../../features/chat/chatSlice";
 import useGetUser from "../../hooks/useGetUser";
-import { ChatItem as Chat } from "../../models/chat";
+import { ChatItem as Chat, ChatListData } from "../../models/chat";
 import { RootState } from "../../store";
 import { ChatMainContext, Params } from "./ChatFrame";
 import ChatItem from "./ChatItem";
@@ -11,12 +15,17 @@ type ChatScreenProps = {};
 
 const ChatScreen = (props: ChatScreenProps) => {
   const user = useContext(ChatMainContext);
+  const param: Params = useParams();
+  const id = param.friendID;
+  const dispatch = useDispatch();
 
   const myAccount = useSelector((state: RootState) => state.signUp.myAccount);
+  const main = document.getElementById("chat__main");
+  const height = main?.scrollHeight;
   useEffect(() => {
-    const main = document.getElementById("chat__main");
-    main && main.scrollTo(0, main.scrollHeight);
-  }, [user]);
+    main && height && main.scrollTo(0, height);
+    
+  }, [user,height]);
 
   useEffect(() => {
     const medias = document.querySelectorAll<HTMLElement>("#media__attach");
@@ -28,7 +37,9 @@ const ChatScreen = (props: ChatScreenProps) => {
       }
     }
   }, [user]);
-  
+
+ 
+
   return (
     <div className="chat__screen" id="chat__main">
       <div className="chat__screen__main">

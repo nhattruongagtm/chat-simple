@@ -9,17 +9,19 @@ export const uploadMedia = (
   let urls: string[] = [];
   return new Promise((resolve, reject) => {
     data.forEach((item, index) => {
-      const path = `${idMessage}/${idMessage + uid + Date.now() + index}.png`;
+      const path = `${idMessage}/${idMessage + uid + Date.now() + index}`;
       const mediaRef = ref(storage, path);
       uploadBytes(mediaRef, item)
         .then((snapshot) => {
           if (snapshot) {
+            
             //   get url
             getDownloadURL(ref(storage, path))
               .then((url) => {
                 urls.push(url);
-
+               
                 if (urls.length === data.length) {
+
                   resolve(urls);
                 }
               })

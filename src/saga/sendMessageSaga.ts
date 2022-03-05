@@ -1,5 +1,6 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { call, delay, put, take, takeEvery } from "redux-saga/effects";
+import { blob } from "stream/consumers";
 import { sendMessage } from "../api/chat";
 import { uploadMedia } from "../api/storage";
 import { BlobType, MessageModel } from "../components/MainChat/InputFrame";
@@ -23,26 +24,46 @@ function* sendMessageWatcher({ payload }: PayloadAction<MessageModel>) {
     const { id, content, blobs } = payload;
 
     if (blobs && blobs.length > 0) {
-      const urls: string[] = yield uploadMedia(
-        content.ownID,
-        id,
-        getListUrl(blobs, 0)
-      );
-      const videosUrl: string[] = yield uploadMedia(
-        content.ownID,
-        id,
-        getListUrl(blobs, 1)
-      );
+      let urls:string[] = []
+      let videoUrls:string[] = []
 
-      console.log(videosUrl);
+      let urlType: File[] = yield call(getListUrl,blobs,0);
+      let videoType: File[] = yield call(getListUrl,blobs,1);
+
+      if(urlType.length > 0){
+        const url: string[] = yield call(
+          uploadMedia,
+          content.ownID,
+          id,
+          urlType
+        );
+        urls = url;
+      }
+      else{
+        urls = []
+      }
+      if(videoType.length > 0){
+        const url: string[] = yield call(
+          uploadMedia,
+          content.ownID,
+          id,
+          videoType
+        );
+        videoUrls = url;
+      }
+      else{
+        videoUrls = []
+      }
+
       const newContent: ChatItem = {
         ...content,
-        content: { ...content.content, media: urls, video: videosUrl },
+        content: { ...content.content, media: urls, video: videoUrls },
       };
       yield call(sendMessage, id, newContent);
     } else {
       yield call(sendMessage, id, content);
     }
+
     // // update send status
     yield delay(500);
     yield put(requestSendMessageSuccess(payload));

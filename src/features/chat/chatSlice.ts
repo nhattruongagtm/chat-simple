@@ -2,7 +2,10 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ChatCollection } from "../../components/MainChat/ChatFrame";
 import { MessageModel } from "../../components/MainChat/InputFrame";
 import { ChatItem, ChatListData } from "../../models/chat";
-
+export interface TypingItem {
+  id: string;
+  avatar: string;
+}
 const initialState: InitialState = {
   loading: false,
   chatList: [
@@ -16,6 +19,7 @@ const initialState: InitialState = {
   sendLoading: false,
   chatDetail: [],
   chatID: "",
+  typing: [],
 };
 interface InitialState {
   chatList: ChatListData[];
@@ -23,6 +27,7 @@ interface InitialState {
   sendLoading: boolean;
   chatDetail: ChatItem[];
   chatID: string;
+  typing: TypingItem[];
 }
 
 const ChatMainReducer = createSlice({
@@ -59,9 +64,8 @@ const ChatMainReducer = createSlice({
 
       if (index > -1) {
         state.chatList[index] = action.payload;
-      }
-      else{
-        state.chatList.push(action.payload)
+      } else {
+        state.chatList.push(action.payload);
       }
     },
     requestLoadMessagesFail1: (state) => {
@@ -85,7 +89,6 @@ const ChatMainReducer = createSlice({
           data: content,
         });
       }
-
     },
     requestSendMessageSuccess: (state, action: PayloadAction<MessageModel>) => {
       const { id, content, info } = action.payload;
@@ -106,6 +109,26 @@ const ChatMainReducer = createSlice({
     updateChatID: (state, action: PayloadAction<string>) => {
       state.chatID = action.payload;
     },
+    resetData: (state) => {
+      state.chatList = [];
+    },
+    typingMessage: (state, action: PayloadAction<TypingItem>) => {
+      const data = action.payload;
+      const index = state.typing.findIndex((item) => item.id === data.id);
+
+      if (index > -1) {
+        state.typing[index] = data;
+      } else {
+        state.typing.push(data);
+      }
+    },
+    resetTypingMessage: (state, action: PayloadAction<string>) => {
+      const index = state.typing.findIndex((item) => item.id === action.payload);
+
+      if (index > -1) {
+        state.typing.splice(index, 1);
+      }
+    },
   },
 });
 
@@ -121,6 +144,8 @@ export const {
   requestLoadDetailSuccess,
   updateChatID,
   requestLoadMessageItemSuccess,
+  typingMessage,
+  resetTypingMessage,
 } = ChatMainReducer.actions;
 
 export default ChatMainReducer.reducer;

@@ -4,7 +4,7 @@ $border: rgb(129, 129, 129);
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0);
+  transform: translate(-50%, -50%) scale(0.5);
   z-index: 50;
   width: 500px;
   min-height: 400px;
@@ -16,6 +16,8 @@ $border: rgb(129, 129, 129);
   border: 2px solid $border;
   transition: 0.2s;
   max-height: 80%;
+  opacity: 0;
+  visibility: hidden;
   &__header {
     display: flex;
     justify-content: space-between;
@@ -240,6 +242,8 @@ $border: rgb(129, 129, 129);
   }
 }
 .search__user--popup {
+  visibility: visible;
+  opacity: 1;
   transform: translate(-50%, -50%) scale(1);
 }
 @media screen and(max-width: 767px) {

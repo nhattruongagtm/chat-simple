@@ -20,8 +20,7 @@
   }
   &__main {
       overflow-y: scroll;
-      // height: 250px;
-      flex-grow: 1;
+      height: 315px;
       &::-webkit-scrollbar{
           display: none;
       }
@@ -155,5 +154,12 @@
   }
   .all__message__item--layer{
     height: 80px!important;
+  }
+}
+@media screen and(max-width: 767px) {
+  .all__message{
+    &__main{
+      height: 430px!important;
+    }
   }
 }

@@ -1,5 +1,7 @@
 .detail__info {
-  flex-grow: 1;
+  // flex-grow: 1;
+  width: 300px;
+  max-width: 300px;
   background: linear-gradient(to bottom, $dark-brown, $super-dark);
   padding: 15px;
   transition: 0.2s;
@@ -155,14 +157,17 @@
   }
   .detail__media {
     display: flex;
-    gap: 5px;
     margin-bottom: 30px;
+    width: 100%;
+    justify-content: space-between;
 
     .detail__media__item {
       width: 45px;
       height: 45px;
       border-radius: 8px;
       overflow: hidden;
+      background-color: $dark;
+      border: 2px solid $dark-gray;
     }
 
     img {
@@ -170,7 +175,6 @@
       height: 100%;
       transform: scale(1.5);
       object-fit: cover;
-      background-color: blue;
     }
     .detail__media__more {
       // background-color: $blue;
@@ -199,13 +203,16 @@
           background-color: red;
         }
         &--yellow {
-          background-color: yellow;
+          background-color: #5e00eb;
         }
         &--green {
           background-color: green;
         }
         &--blue {
           background-color: $blue;
+        }
+        &--pink {
+          background-color: rgb(255, 78, 225);
         }
       }
     }

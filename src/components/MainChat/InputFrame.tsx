@@ -1,16 +1,30 @@
+import { doc, onSnapshot } from "firebase/firestore";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { uploadMedia } from "../../api/storage";
+import { useParams } from "react-router";
+import {
+  insertTyping,
+  MESSAGES_DOC,
+  removeTyping,
+  TYPINGS_DOC,
+} from "../../api/chat";
+import { db } from "../../config/firebase";
 import { displayGiphyPopup } from "../../features/auth/modalSlice";
 import {
   requestSendMessage,
-  requestSendMessageSuccess,
+  resetTypingMessage,
+  typingMessage,
 } from "../../features/chat/chatSlice";
-import useGetUser from "../../hooks/useGetUser";
 import { User } from "../../models/auth";
-import { ChatItem, ContentFile } from "../../models/chat";
+import {
+  ChatItem,
+  ChatListData,
+  ContentFile,
+  TypingMessage,
+} from "../../models/chat";
 import { RootState } from "../../store";
-import { ChatMainContext } from "./ChatFrame";
+import { Avatar } from "../Messages/MessagePanel";
+import { ChatMainContext, Params } from "./ChatFrame";
 
 export interface MessageModel {
   id: string;
@@ -19,9 +33,9 @@ export interface MessageModel {
   blobs?: BlobType[];
 }
 
-export interface BlobType{
-  type: 0 | 1,
-  file: File,
+export interface BlobType {
+  type: 0 | 1;
+  file: File;
 }
 
 const InputFrame = () => {
@@ -35,10 +49,14 @@ const InputFrame = () => {
   const myAccount = useSelector((state: RootState) => state.signUp.myAccount);
   const dispatch = useDispatch();
   const id = useContext(ChatMainContext)?.id;
+  const param: Params = useParams();
+  const path = param.friendID;
 
   const msg = useSelector((state: RootState) => state.chat.chatDetail);
-
+  // const typingStore = useSelector((state: RootState) => state.chat.typing);
+  // const typing = path ? typingStore.find(item=>item.id === path)?.avatar : "";
   const blobsRef = useRef<BlobType[]>([]);
+  const [isTyping, setIsTyping] = useState<string>("");
 
   useEffect(() => {
     return () => {
@@ -68,8 +86,9 @@ const InputFrame = () => {
         sendStatus: 0,
         status: 0,
       };
+
       if (id) {
-        console.log(content);
+       
         dispatch(
           requestSendMessage({
             id: id,
@@ -78,7 +97,7 @@ const InputFrame = () => {
             blobs: blobsRef.current,
           })
         );
-        // message(chatItem)
+
         setContent(initialValue);
       }
     }
@@ -86,7 +105,6 @@ const InputFrame = () => {
 
   const handleChangeFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-
     if (files && id) {
       let blobs = [];
       let blobsVideo = [];
@@ -126,6 +144,82 @@ const InputFrame = () => {
       video: content.video.filter((item, i) => i !== index),
     });
   };
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const text = e.target.value;
+    const data = {
+      id: path,
+      avatar:
+        myAccount.photoUrl !== "" ? myAccount.photoUrl : myAccount.firstName,
+    };
+    if (text.trim().length === 1) {
+      insertTyping(data);
+    }
+    setContent({ ...content, text });
+  };
+
+  useEffect(() => {
+    const data = {
+      id: path,
+      avatar:
+        myAccount.photoUrl !== "" ? myAccount.photoUrl : myAccount.firstName,
+    };
+    if (content.text === "") {
+      removeTyping(data);
+    }
+  }, [content.text]);
+
+  useEffect(() => {
+    let isCancel = false;
+    const typingListener = async () => {
+      if (path) {
+        try {
+          const typingRef = doc(db, TYPINGS_DOC, path);
+
+          onSnapshot(typingRef, (doc) => {
+            if (doc.exists()) {
+              const data = doc.data() as TypingMessage;
+
+              const { typing } = data;
+
+              const partner = typing.filter(
+                (item) => item !== (myAccount.photoUrl || myAccount.firstName)
+              );
+
+              if (partner.length > 0) {
+                setIsTyping(partner[partner.length - 1]);
+              } else {
+                setIsTyping("");
+              }
+            }
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+    !isCancel && id && typingListener();
+
+    return () => {
+      isCancel = true;
+    };
+  }, [content]);
+
+  useEffect(() => {
+    if (isTyping !== "") {
+      const dots = document.getElementsByClassName(
+        "typing__dots"
+      ) as HTMLCollectionOf<HTMLElement>;
+
+      if (dots) {
+        for (let i = 0; i < dots[0].children.length; i++) {
+          const element = dots[0].childNodes[i] as HTMLElement;
+
+          element.style.animation = `typing ${1.5}s infinite `;
+          element.style.animationDelay = `${0.5 + i}s`;
+        }
+      }
+    }
+  }, [isTyping]);
 
   return (
     <form className="input__chat" onSubmit={handleSendMessage}>
@@ -160,13 +254,18 @@ const InputFrame = () => {
         </div>
       )}
       <div className="avatar input__chat__avatar">
-        <img src={myAccount.photoUrl} alt="" />
+        {myAccount && myAccount.photoUrl !== "" ? (
+          <img src={myAccount.photoUrl} alt="" />
+        ) : (
+          myAccount &&
+          myAccount.photoUrl === "" && <Avatar name={myAccount.firstName} />
+        )}
       </div>
       <input
         type="text"
         placeholder="Type your message..."
         value={content.text as string}
-        onChange={(e) => setContent({ ...content, text: e.target.value })}
+        onChange={handleChangeInput}
       />
       <div className="input__attach">
         <i
@@ -187,9 +286,30 @@ const InputFrame = () => {
           <i className="fas fa-paper-plane"></i>
         </button>
       </div>
-      {/* <div className="typing">
-        
-      </div> */}
+      {isTyping !== "" &&
+        isTyping !== myAccount.photoUrl &&
+        isTyping !== myAccount.firstName && (
+          <div className="typing">
+            <audio src="../audio/typing.mp3" autoPlay />
+            <div className="avatar typing__avatar">
+              {isTyping.indexOf("http") !== -1 ? (
+                <img src={isTyping} alt="" />
+              ) : (
+                <>
+                  <img
+                    src="https://dvdn247.net/wp-content/uploads/2020/07/avatar-mac-dinh-2.jpg"
+                    alt=""
+                  />
+                </>
+              )}
+            </div>
+            <div className="typing__dots">
+              <i className="bx bxs-circle"></i>
+              <i className="bx bxs-circle"></i>
+              <i className="bx bxs-circle"></i>
+            </div>
+          </div>
+        )}
     </form>
   );
 };

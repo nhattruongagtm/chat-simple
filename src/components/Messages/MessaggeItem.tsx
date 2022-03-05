@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation, useParams } from "react-router";
+import { ME_PATH } from "../../constants/routes";
 import { requestLoadDetail } from "../../features/chat/chatSlice";
 import { updateTab } from "../../features/global/deviceSlice";
 import { User } from "../../models/auth";
@@ -45,7 +46,7 @@ const MessaggeItem = ({ msg }: MessaggeItemProps) => {
   const device = useSelector((state: RootState) => state.device);
 
   const handleLoadDetail = () => {
-    path !== msg.id && history.push(`/me/${msg.id}`);
+    path !== msg.id && history.push(`${ME_PATH}/${msg.id}`);
     // path && dispatch(requestLoadDetail(msg.messages));
     if (device.width <= 480) {
       dispatch(updateTab(1));

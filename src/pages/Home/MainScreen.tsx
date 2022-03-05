@@ -1,10 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router";
 import GiphyPopUp from "../../components/Modals/GiphyPopUp";
 import SearchUser from "../../components/Modals/SearchUser";
 import { ACCESS__TOKEN } from "../../constants/routes";
-import { requestLoadMessages1 } from "../../features/chat/chatSlice";
 import useGetUser from "../../hooks/useGetUser";
 import { RootState } from "../../store";
 import MainPage from "./MainPage";
@@ -33,7 +32,6 @@ const MainScreen = (props: Props) => {
       <Redirect to="/"/>
     )
   }
-
   return (
     <div className="main__screen">
       <MainPage />
